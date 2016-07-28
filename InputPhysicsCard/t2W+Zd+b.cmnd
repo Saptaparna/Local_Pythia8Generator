@@ -1,0 +1,112 @@
+
+
+
+
+
+
+
+
+!-------------------------------------------------------------------------
+! 1) Settings that will be used in a main program.
+
+Main:numberOfEvents = 10000          ! number of events to generate
+Main:timesAllowErrors = 5          ! abort run after this many flawed events
+
+
+
+!-------------------------------------------------------------------------
+! 2) Settings related to output in init(), next() and stat().
+
+Init:showChangedSettings = on       ! list changed settings
+Init:showAllSettings = off          ! list all settings
+Init:showChangedParticleData = on   ! list changed particle data
+Init:showAllParticleData = off      ! list all particle data
+Init:showChangedResonanceData = off  ! also print changed resonance data
+!Init:showOneParticleData = 25       ! print data for this particular particle
+!Init:showOneParticleData = 5        ! print data for this particular particle
+Next:numberCount = 100              ! print message every n events
+Next:numberShowLHA = 0              ! print LHA information n times
+Next:numberShowInfo = 1             ! print event information n times
+Next:numberShowProcess = 10          ! print process record n times
+Next:numberShowEvent = 1            ! print event record n times
+Stat:showPartonLevel = on           ! additional statistics on MPI
+
+
+
+!-------------------------------------------------------------------------
+! 3) Beam parameter settings. Values below agree with default ones.
+
+Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
+Beams:idB = -2212                   ! second beam, p = 2212, pbar = -2212
+Beams:eCM = 8000                   ! CM energy of collision
+4900023:mMin = 10                  ! Set the minmum mass of higgs
+4900023:m0   = 29.0                ! Set the mass of higgs
+4900023:mWidth = 0.5
+4900023:7:MeMode = 102
+
+Top:qq2tq(t:W) = on                !Single Top production via t channel Switch on Top production
+6:onMode = off
+6:addChannel = 1 1.0 100 24 5 4900023
+6:onIfAny = 4900023
+
+4900023:onMode    = off                 ! switch off decay modes
+4900023:onIfMatch = 13 -13              ! Force to dark photon decay into muons
+4900023:8:all = 1 1.0 100 13 -13        ! Turn Set the mumu brunching Ratio to be 1
+!4900023:isResonance = on;              ! The Dark photon is On or off resonance
+
+
+
+!PartonLevel:all = off              ! stop after hard process
+PartonLevel:MPI = off               ! no multiparton interactions
+PartonLevel:ISR = off              ! no initial-state radiation
+PartonLevel:FSR = off              ! no final-state radiation
+!HadronLevel:all = off              ! stop after parton level
+!HadronLevel:Hadronize = off        ! no hadronization
+!HadronLevel:Decay = off            ! no decays
+
+
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+
+
+
+
+!PromptPhoton:qg2qgmZ = on        ! Scattering q g → q gamma. Code 201.
+!HardQCD:gg2bbbar = on            ! 1
+!HardQCD:qqbar2bbbar = on         ! 2
+!HardQCD:qg2qg = on               ! 3
+!HardQCD:qq2qq = on               ! 4
+!HiggsSM:gg2Hbbbar = on           ! 5
+!HiggsSM:qqbar2Hbbbar = on        ! 6
+!HiggsSM:qg2Hq = on               ! 7
+!HiggsSM:qg2Hq(l:t) = on          ! 8
+
+
+
+
+!22:addChannel = 1 1 100 13 -13     ! New decay mode for gamma  gm -> -mu +mu
+!22:onMode = 1                      ! Decay modes for gamma
+!22:offIfMatch = 11 -11
+!22:onIfMatch = 13 -13              ! gamma -> mu- mu+
+
+!24:addChannel = 1 100.0 103 -1 2 4900023 !Add dark radiation of W
+!24:onIfMatch = -1 2 4900023          !Switch on only the W dark radiation
+
+!24:onMode = off                        !Stop W decay
+!24:addChannel = 1 0.3262057 103 -1 2 4900023
+!24:addChannel = 1 0.3254506 103 -3 4 4900023
+!24:addChannel = 1 0.0177553 103 -3 2 4900023
+!24:addChannel = 1 0.0000054 103 -5 2 4900023
+!24:addChannel = 1 0.0006093 103 -5 4 4900023
+!24:addChannel = 1 0.1100182 103 -11 12 4900023
+!24:addChannel = 1 0.1100179 103 -13 14 4900023
+!24:addChannel = 1 0.1099376 103 -15 16 4900023
+!24:onIfAny = 4900023
