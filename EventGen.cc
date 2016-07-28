@@ -34,25 +34,21 @@
 #include "TApplication.h"
 
 
+// Set the polarization type:
+// 1.0 = + (trans)
+// 0.0 = 0 (long)
+// -1.0 = - (trans)
+// 9.0 = scalar
+#define mypolarization 9.0
+// 4900023 for Zd
+// 34 for W'
+#define myspinningparticle 4900023
 
 
 using namespace Pythia8;
 
 int main(int argc, char* argv[]) {
-    
-    
-  // Set the polarization type:
-  // 1.0 = + (trans)
-  // 0.0 = 0 (long)
-  // -1.0 = - (trans)
-  // 9.0 = scalar
-  double polarization = 9.0;
-    
 
-    
-    
-    
-    
   // Generator.
   Pythia pythia;  
   // Read in commands from external file.
@@ -102,7 +98,7 @@ int main(int argc, char* argv[]) {
 
 
     // Initialize UserHooks class in helicity_user_hook.cc & helicity_user_hook.h
-    MyUserHooks* myUserHooks = new MyUserHooks(&pythia.info, true, polarization);
+    MyUserHooks* myUserHooks = new MyUserHooks(&pythia.info, true, mypolarization, myspinningparticle);
     // bool argument to switch on and off process level veto
     pythia.setUserHooksPtr(myUserHooks);
     // Connect Pythia user hooks to the derived class
@@ -245,7 +241,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             }
         }
         
-        if(pythia.event[i].idAbs() ==34){
+        // use place of higgs to store spinning particle
+        if(pythia.event[i].idAbs() == myspinningparticle){
             HiggspT -> Fill(pythia.event[i].pT());
             Higgseta -> Fill (pythia.event[i].eta());
             HiggsetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());

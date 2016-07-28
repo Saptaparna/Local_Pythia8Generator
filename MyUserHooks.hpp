@@ -23,6 +23,7 @@ class MyUserHooks : public UserHooks {
 public:
     
     MyUserHooks(Info* , bool, double);
+    MyUserHooks(Info* , bool, double, int);
     ~MyUserHooks();
     
     bool canVetoProcessLevel();
@@ -34,7 +35,8 @@ private:
     Info* infoPtr;
     // bool to define the frame for helicity.
     bool helicityDefinedByMother;
-    double polarization;
+    double _polarization;
+    int _spinningparticle;
     
 };
 

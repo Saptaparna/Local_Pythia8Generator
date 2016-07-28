@@ -18,12 +18,21 @@
 // For W- this is (1 -+ cos(theta))^2 for +-1, sin^2(theta) for 0,
 // and isotropic for 9. For W+ it is flipped (i.e. theta->pi-theta).
 // The Pythia decay products (i.e. the branching ratios) are retained.
-const int SpinningParticleID = 34;
+// const int SpinningParticleID = 34;
 // pdgid 34 for W'
     
 // Constructor can set helicity definition. Destructor does nothing.
 MyUserHooks::MyUserHooks(Info* infoPtrIn, bool inputOption, double polarization)
-: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption), polarization(polarization)
+: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption), _polarization(polarization)
+{
+    //infoPtr = infoPtrIn;
+    //helicityDefinedByMother = inputOption;
+    //polarization =  polarization;
+}
+
+// Constructor can set helicity definition. Destructor does nothing.
+MyUserHooks::MyUserHooks(Info* infoPtrIn, bool inputOption, double polarization, int spinningparticle)
+: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption), _polarization(polarization), _spinningparticle(spinningparticle)
 {
     //infoPtr = infoPtrIn;
     //helicityDefinedByMother = inputOption;
@@ -41,11 +50,11 @@ bool MyUserHooks::doVetoProcessLevel(Event& process) {
     // Identify decayed W+- bosons for study.
     // Assume isotropic decay if polarization is unphysically big (|pol|>2)
     for (int i = 0; i < process.size(); ++i) {
-        if (process[i].idAbs() == 34 /*&& process[i].status() == -22*/) {
+        if (process[i].idAbs() == _spinningparticle /*&& process[i].status() == -22*/) {
             
             // Pick decay angles according to desired distribution
             // based on polarization and particle/antiparticle. process[i].pol()
-            double cosThe = selectAngle( polarization , process[i].id() );
+            double cosThe = selectAngle( _polarization , process[i].id() );
             // Accumulate the raw angular distribution.
             //cosRaw.fill( cosThe );
             double sinThe = sqrt(1.0 - pow2(cosThe));
