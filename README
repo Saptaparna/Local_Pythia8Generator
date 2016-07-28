@@ -1,0 +1,10 @@
+1) When using the generator, do not touch myuserhook.h and myuserhook.cpp
+2) Change the polariztion and spinningparticleID at the macro definiation of EventGen.cc
+3) Select the physics topology in InputPhysicsCard/XXXX.cmnd
+
+---------------------------------------------------------------------------------------
+Before compile, specify your root library in Makefile.inc
+Or you can replace the Makefile.inc with your own version in your Pythia/Examples/
+To compile use --bash$ make EventGen
+To Run use     --bash$ ./EventGen InputPhysicsCard/XXXX.cmnd
+
