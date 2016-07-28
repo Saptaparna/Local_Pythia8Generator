@@ -39,10 +39,10 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 1.0
+#define mypolarization 9.0
 // 4900023 for Zd
 // 34 for W'
-#define myspinningparticle 4900023
+#define myspinningparticle 34
 
 
 using namespace Pythia8;
@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
     TH1F *InvariantMass = new TH1F("InvariantMass", "InvariantMass", 100, 0., 120.);
     TH1F *leadingMuonPt = new TH1F("leadingMuonPt", "leadingMuonPT", 100, 0., 120.);
     TH1F *trailingMuonPt = new TH1F("trailingMuonPt", "trailingMuonPT", 100, 0., 100.);
-    TH1F *ZPt = new TH1F("ZPt", "ZPt", 50, 0., 200.);
+    TH1F *XPt = new TH1F("XPt", "XPt", 50, 0., 200.);
     
     // Some other useful hist
     TH1F *MuonCount = new TH1F("MuonCount","Muon count", 20, 0, 15);
@@ -323,7 +323,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 InvariantMass->Fill( p1.mCalc() );
                 
                 
-                ZPt->Fill(pythia.event[i].pT());
+                XPt->Fill(pythia.event[i].pT());
                 
                 double Pt_muon_i1 = pythia.event[i1].pT();
                 double Pt_muon_i2 = pythia.event[i2].pT();
@@ -448,7 +448,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     pdgid -> Write();
 
     cosDist->Write();
-    ZPt->Write();
+    XPt->Write();
     leadingMuonPt->Write();
     trailingMuonPt->Write();
     InvariantMass->Write();
