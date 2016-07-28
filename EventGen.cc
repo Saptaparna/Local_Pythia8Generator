@@ -263,8 +263,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 if (pythia.event[MuonMother2].idAbs() >250 ) MuonMotherDistribution -> Fill (249);
                 else MuonMotherDistribution -> Fill (pythia.event[MuonMother2].idAbs());
             }
-            //3.3. Find Muon from Wprime
-            if(pythia.event[MuonMother1].idAbs() ==34 || pythia.event[MuonMother2].idAbs() ==34){
+            //3.3. Find Muon from W
+            if(pythia.event[MuonMother1].idAbs() == 24 || pythia.event[MuonMother2].idAbs() ==24){
                 MuonWpT -> Fill(pythia.event[i].pT());
                 MuonWeta -> Fill (pythia.event[i].eta());
                 MuonWetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
@@ -286,7 +286,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
         // 4. Poloarztion
         // Select W+/- and veto final state radiation
-        if (pythia.event[i].idAbs() == 34 )
+        if (pythia.event[i].idAbs() == myspinningparticle )
         {
             // identify daughters of the W
             int i1 = pythia.event[i].daughter1();
@@ -459,7 +459,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     delete myUserHooks;
 
     //----------------------------------------------------------
-    
+
   // Done.
   return 0;
 }
