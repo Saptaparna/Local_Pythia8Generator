@@ -39,7 +39,7 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 9.0
+#define mypolarization 1.0
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
   // Create an LHAup object that can access relevant information in pythia.
   LHAupFromPYTHIA8 myLHA(&pythia.process, &pythia.info);
   // Open a file on which LHEF events should be stored, and write header.
-  myLHA.openLHEF("../OutputRawData/t2bWprime_Polarize.lhe");
+  myLHA.openLHEF("../OutputRawData/hardprocess.lhe");
   // Setup TFile to store root hist and root tree
   TFile *file = TFile::Open("../OutputRawData/KinematicsHist.root","recreate");
 
@@ -142,9 +142,9 @@ int main(int argc, char* argv[]) {
     TH1F *MuonWpT = new TH1F("MuonWpT","MuonW pT", 100, 0, 120);
     TH1F *MuonWeta = new TH1F("MuonWeta","MuonW eta", 100, -5, 5);
     TH2F *MuonWetapT = new TH2F("MuonWetapT", "MuonW eta:pT", 100,-5,5,100,0,120);
-    TH1F *HiggspT = new TH1F("HiggspT","Higgs pT", 100, 0, 200);
-    TH1F *Higgseta = new TH1F("Higgseta","Higgs eta", 100, -5, 5);
-    TH2F *HiggsetapT = new TH2F("HiggsetapT", "Higgs eta:pT", 100,-5,5,100,0,200);
+    TH1F *PolarpT = new TH1F("PolarpT","Polar pT", 100, 0, 200);
+    TH1F *Polareta = new TH1F("Polareta","Polar eta", 100, -5, 5);
+    TH2F *PolaretapT = new TH2F("PolaretapT", "Polar eta:pT", 100,-5,5,100,0,200);
     
     TH1F *bpT = new TH1F("bpT","b pT", 100, 0, 200);
     TH1F *beta = new TH1F("beta","b eta", 100, -5, 5);
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
 
     int iTop = 0;
     int iAbort = 0;
-    bool ThisIsHiggs;
+    bool ThisIsPolar;
     int bevent=0;
     int beventcut=0;
     
@@ -241,11 +241,11 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             }
         }
         
-        // use place of higgs to store spinning particle
+        // use place of Polar to store spinning particle
         if(pythia.event[i].idAbs() == myspinningparticle){
-            HiggspT -> Fill(pythia.event[i].pT());
-            Higgseta -> Fill (pythia.event[i].eta());
-            HiggsetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
+            PolarpT -> Fill(pythia.event[i].pT());
+            Polareta -> Fill (pythia.event[i].eta());
+            PolaretapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
         }
 
         // 3. Muons
@@ -427,9 +427,9 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     MuonWpT ->Write();
     MuonWeta ->Write();
     MuonWetapT ->Write();
-    HiggspT ->Write();
-    Higgseta -> Write();
-    HiggsetapT ->Write();
+    PolarpT ->Write();
+    Polareta -> Write();
+    PolaretapT ->Write();
     
     bpT->Write();
     beta->Write();
