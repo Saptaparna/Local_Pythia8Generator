@@ -23,20 +23,17 @@
     
 // Constructor can set helicity definition. Destructor does nothing.
 MyUserHooks::MyUserHooks(Info* infoPtrIn, bool inputOption, double polarization)
-: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption), _polarization(polarization)
+: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption)
 {
-    //infoPtr = infoPtrIn;
-    //helicityDefinedByMother = inputOption;
-    //polarization =  polarization;
+    _polarization =  polarization;
 }
 
 // Constructor can set helicity definition. Destructor does nothing.
 MyUserHooks::MyUserHooks(Info* infoPtrIn, bool inputOption, double polarization, int spinningparticle)
-: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption), _polarization(polarization), _spinningparticle(spinningparticle)
+: infoPtr(infoPtrIn), helicityDefinedByMother(inputOption)
 {
-    //infoPtr = infoPtrIn;
-    //helicityDefinedByMother = inputOption;
-    //polarization =  polarization;
+    _polarization =  polarization;
+    _spinningparticle = spinningparticle;
 }
 
 MyUserHooks:: ~MyUserHooks() {}

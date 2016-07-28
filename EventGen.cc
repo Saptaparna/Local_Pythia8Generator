@@ -406,7 +406,6 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     
 }
     
-
 //------------------Event Loop ends-------------------------------------------
     
     cout<< "The b event count is " << bevent << " , the cut the b event count is " << beventcut << endl;
@@ -459,10 +458,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     myLHA.closeLHEF(true);
     delete myUserHooks;
 
-    //-------------------------------------------------------------
-    
- 
-    
+    //----------------------------------------------------------
   // Done.
   return 0;
 }
