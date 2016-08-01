@@ -11,6 +11,16 @@
 // The main program contains no analysis; this is intended to happen later.
 // It therefore "never" has to be recompiled to handle different tasks.
 
+// Set the polarization type:
+// 1.0 = + (trans)
+// 0.0 = 0 (long)
+// -1.0 = - (trans)
+// 9.0 = scalar
+#define mypolarization 1.0
+// 4900023 for Zd
+// 34 for W'
+#define myspinningparticle 34
+
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.
 #include <iostream>
@@ -34,15 +44,7 @@
 #include "TApplication.h"
 
 
-// Set the polarization type:
-// 1.0 = + (trans)
-// 0.0 = 0 (long)
-// -1.0 = - (trans)
-// 9.0 = scalar
-#define mypolarization 9.0
-// 4900023 for Zd
-// 34 for W'
-#define myspinningparticle 34
+
 
 
 using namespace Pythia8;
@@ -452,7 +454,45 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     leadingMuonPt->Write();
     trailingMuonPt->Write();
     InvariantMass->Write();
+
+
+    delete  MuonCount;
+    delete MuonMotherDistribution;
+    delete Muon1pT;
+    delete Muon1eta;
+    delete Muon1etapT;
+    delete Muon2pT;
+    delete Muon2eta;
+    delete Muon2etapT;
+    delete MuonWpT;
+    delete MuonWeta;
+    delete MuonWetapT;
+    delete PolarpT;
+    delete Polareta;
+    delete PolaretapT;
     
+    delete bpT;
+    delete beta;
+    delete betapT;
+    delete bpTcut;
+    delete betacut;
+    delete betapTcut;
+    delete bCount;
+    delete bcutCount;
+    
+    delete IMass;
+    delete DeltaPhi;
+    delete DeltaR;
+    delete RpT;
+    
+    delete pdgid;
+
+    delete cosDist;
+    delete XPt;
+    delete leadingMuonPt;
+    delete trailingMuonPt;
+    delete InvariantMass;
+
     delete file;
     // Write endtag. Overwrite initialization info with new cross sections.
     myLHA.closeLHEF(true);
