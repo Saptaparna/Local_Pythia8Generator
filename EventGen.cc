@@ -19,7 +19,7 @@
 #define mypolarization 1.0
 // 4900023 for Zd
 // 34 for W'
-#define myspinningparticle 34
+#define myspinningparticle 4900023
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.
@@ -272,7 +272,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 MuonWetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
             }
             //3.4. Find first two leading muons
-            if (pythia.event[i].isFinal() && pythia.event[i].pT() > 0 && std::abs(pythia.event[i].eta()) < 5 ) {
+            if (/*pythia.event[i].isFinal() &&*/ pythia.event[i].pT() > 0 && std::abs(pythia.event[i].eta()) < 5 ) {
                 if (pythia.event[i].pT() > MuonpTtemp1 ) {
                     MuonpTtemp2 = MuonpTtemp1;
                     MuonIndex2 = MuonIndex1;
