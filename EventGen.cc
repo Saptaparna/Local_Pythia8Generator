@@ -55,8 +55,7 @@ int main(int argc, char* argv[]) {
   Pythia pythia;  
   // Read in commands from external file.
   pythia.readFile(argv[1]);
-  // Initialization.
-  pythia.init();
+
 
 
   // Interface for conversion from Pythia8::Event to HepMC event.
@@ -108,7 +107,8 @@ int main(int argc, char* argv[]) {
     pythia.setUserHooksPtr(myUserHooks);
     // Connect Pythia user hooks to the derived class
     
-
+    // Initialization.
+     pythia.init();
     // Store initialization info in the LHAup object.
     myLHA.setInit();
     // Write out this initialization info on the file.
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
     // Book hist for Polarization
     TH1F *cosDist = new TH1F( "cos(theta)_Z", "cos(theta)_Z", 50, -1.0, 1.0);
     // Angular distribution for W+
-    TH1F *leadingMuonPt = new TH1F("leadingMuonPt", "leadingMuonPT", 100, 0., 120.);
+    TH1F *leadingMuonPt = new TH1F("leadingMuonPt", "leadingMuonPT", 100, 0., 160.);
     TH1F *trailingMuonPt = new TH1F("trailingMuonPt", "trailingMuonPT", 100, 0., 100.);
     TH1F *XPt = new TH1F("XPt", "XPt", 50, 0., 200.);
     
@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
     TH1F *MuonMotherDistribution = new TH1F("MuonMotherDistribution","Muon mother", 250, 0, 250);
     TH1F *pdgid = new TH1F("pdgid","Final particle PDG ID", 30, 0, 30);
     
-    TH1F *Muon1pT = new TH1F("Muon1pT","Muon1 pT", 100, 0, 120);
+    TH1F *Muon1pT = new TH1F("Muon1pT","Muon1 pT", 100, 0, 160);
     TH1F *Muon1eta = new TH1F("Muon1eta","Muon1 eta", 100, -5, 5);
     TH2F *Muon1etapT = new TH2F("Muon1etapT", "Muon1 eta:pT", 100,-5,5,100,0,120);
     TH1F *Muon2pT = new TH1F("Muon2pT","Muon2 pT", 100, 0, 120);
