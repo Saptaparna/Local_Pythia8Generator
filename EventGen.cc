@@ -16,7 +16,7 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 1.0
+#define mypolarization 0.0
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023
@@ -55,6 +55,9 @@ int main(int argc, char* argv[]) {
   Pythia pythia;  
   // Read in commands from external file.
   pythia.readFile(argv[1]);
+  // Initialization.
+  pythia.init();
+
 
   // Interface for conversion from Pythia8::Event to HepMC event.
   HepMC::Pythia8ToHepMC ToHepMC;
@@ -105,8 +108,7 @@ int main(int argc, char* argv[]) {
     pythia.setUserHooksPtr(myUserHooks);
     // Connect Pythia user hooks to the derived class
     
-    // Initialization.
-    pythia.init();
+
     // Store initialization info in the LHAup object.
     myLHA.setInit();
     // Write out this initialization info on the file.
@@ -123,7 +125,6 @@ int main(int argc, char* argv[]) {
     // Book hist for Polarization
     TH1F *cosDist = new TH1F( "cos(theta)_Z", "cos(theta)_Z", 50, -1.0, 1.0);
     // Angular distribution for W+
-    TH1F *InvariantMass = new TH1F("InvariantMass", "InvariantMass", 100, 0., 120.);
     TH1F *leadingMuonPt = new TH1F("leadingMuonPt", "leadingMuonPT", 100, 0., 120.);
     TH1F *trailingMuonPt = new TH1F("trailingMuonPt", "trailingMuonPT", 100, 0., 100.);
     TH1F *XPt = new TH1F("XPt", "XPt", 50, 0., 200.);
@@ -133,6 +134,7 @@ int main(int argc, char* argv[]) {
     TH1F *bCount = new TH1F("bCount","b count", 10, -0.5, 9.5);
     TH1F *bcutCount = new TH1F("bcutCount","b cut count", 10, -0.5, 9.5);
     TH1F *MuonMotherDistribution = new TH1F("MuonMotherDistribution","Muon mother", 250, 0, 250);
+    TH1F *pdgid = new TH1F("pdgid","Final particle PDG ID", 30, 0, 30);
     
     TH1F *Muon1pT = new TH1F("Muon1pT","Muon1 pT", 100, 0, 120);
     TH1F *Muon1eta = new TH1F("Muon1eta","Muon1 eta", 100, -5, 5);
@@ -151,9 +153,9 @@ int main(int argc, char* argv[]) {
     TH1F *bpT = new TH1F("bpT","b pT", 100, 0, 200);
     TH1F *beta = new TH1F("beta","b eta", 100, -5, 5);
     TH2F *betapT = new TH2F("betapT", "b eta:pT", 100,-5,5,100, 0, 200);
-    TH1F *bpTcut = new TH1F("bpTcut","cut b pT", 100, 20, 200);
-    TH1F *betacut = new TH1F("betacut","cut b eta", 100, -5, 5);
-    TH2F *betapTcut = new TH2F("betapTcut", "cut b eta:pT", 100,-5,5,100, 20, 200);
+    TH1F *heavyBpT = new TH1F("heavyBpT","heavy b pT", 100, 0, 200);
+    TH1F *heavyBeta = new TH1F("heavyBeta","heavy b eta", 100, -5, 5);
+    TH2F *heavyBetapT = new TH2F("heavyBetapT", "heavy b eta:pT", 100,-5,5,100, 0, 200);
     
     
     TH1F *IMass = new TH1F("IMass","Invariant mass of 2 leading Muons", 100, 0, 100);
@@ -161,18 +163,19 @@ int main(int argc, char* argv[]) {
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,100, 65, 0, 6.5);
     
+    TH1F *IMass2 = new TH1F("IMass2","Invariant mass of mu mu b", 100, 0, 300);
+    TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between polar and b", 65, 0, 6.5);
+    TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between polar and b", 65, 0, 6.5);
+    TH2F *RpT2 = new TH2F("RpT2", "pT:dR", 100,0,100, 65, 0, 6.5);
     
     TH1F *JetpT = new TH1F("JetpT","Jet pT", 200, 0, 200);
     TH1F *Jeteta = new TH1F("Jeteta","Jet eta", 100, -5, 5);
-    TH1F *bJetpT = new TH1F("bJetpT","bJet pT", 200, 0, 200);
-    TH1F *bJeteta = new TH1F("bJeteta","bJet eta", 100, -5, 5);
-    
-    TH1F *pdgid = new TH1F("pdgid","Final particle PDG ID", 30, 0, 30);
+
     
     // Root Tree initiated
-    TTree *T = new TTree("T","ev1 Tree");
-    Event *thisevent = &pythia.event;
-    T->Branch("event", &thisevent);
+    //TTree *T = new TTree("T","ev1 Tree");
+    //Event *thisevent = &pythia.event;
+    //T->Branch("event", &thisevent);
 
     //...................................................................................
     //...................................................................................    
@@ -194,14 +197,15 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
     int MuonIndex1 =0;
     int MuonIndex2 =0;
+    int bIndex =0;
     double MuonpTtemp1 = -1;
     double MuonpTtemp2 = -1;
-    Particle Muon1, Muon2;
+    Particle Muon1, Muon2, bjet;
     
-    double InvirantMass = -1;
+    double InvariantMass = -1;
     double iMuon = 0;
     int ib = 0;
-    int ibcut =0;
+    int ibprime =0;
     double Deltaeta = -1;
     double Deltaphi =-1;
 
@@ -229,20 +233,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             if (pythia.event[i].idAbs()<30) pdgid->Fill(pythia.event[i].idAbs());
             else pdgid->Fill(29);
         }
-        // 2. b quarks
-        if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=2212 && pythia.event[pythia.event[i].mother1()].idAbs()!= 5){
+        // 2. B->b+polar
+
+        if (pythia.event[i].idAbs() == 7) {
+                heavyBpT -> Fill(pythia.event[i].pT());
+                heavyBeta -> Fill (pythia.event[i].eta());
+                heavyBetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
+                ibprime ++;
+            }
+
+        if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()==7 ){
             bpT -> Fill(pythia.event[i].pT());
             beta -> Fill (pythia.event[i].eta());
             betapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
             ib ++;
-            if (pythia.event[i].pT() > 30 && std::abs(pythia.event[i].eta()) < 2.4) {
-                bpTcut -> Fill(pythia.event[i].pT());
-                betacut -> Fill (pythia.event[i].eta());
-                betapTcut -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
-                ibcut ++;
-            }
+            bIndex =i;
         }
-        
+
         // use place of Polar to store spinning particle
         if(pythia.event[i].idAbs() == myspinningparticle){
             PolarpT -> Fill(pythia.event[i].pT());
@@ -250,29 +257,32 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             PolaretapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
         }
 
+
+
+
         // 3. Muons
-        if (pythia.event[i].idAbs()==13) {
-            //3.1. count Muons
-            if(pythia.event[pythia.event[i].mother1()].idAbs() !=13  && pythia.event[pythia.event[i].mother2()].idAbs() !=13) iMuon ++;
-            //3.2. Count Muon Mothers
+        if (pythia.event[i].idAbs()==13 && pythia.event[pythia.event[i].mother1()].idAbs() !=13  && pythia.event[pythia.event[i].mother2()].idAbs() !=13) {
             int MuonMother1 = pythia.event[i].mother1();
             int MuonMother2 = pythia.event[i].mother2();
-            if (pythia.event[MuonMother1].idAbs() !=13) {
-                if (pythia.event[MuonMother1].idAbs() >250 ) MuonMotherDistribution -> Fill (249);
-                else MuonMotherDistribution -> Fill (pythia.event[MuonMother1].idAbs());
-            }
-            if (pythia.event[MuonMother2].idAbs() !=13) {
-                if (pythia.event[MuonMother2].idAbs() >250 ) MuonMotherDistribution -> Fill (249);
-                else MuonMotherDistribution -> Fill (pythia.event[MuonMother2].idAbs());
-            }
+            
+            //3.1. count Muons
+            iMuon ++;
+            //3.2. Count Muon Mothers
+            if (pythia.event[MuonMother1].idAbs() >250 ) MuonMotherDistribution -> Fill (249);
+            else MuonMotherDistribution -> Fill (pythia.event[MuonMother1].idAbs());
+        
+            if (pythia.event[MuonMother2].idAbs() >250 ) MuonMotherDistribution -> Fill (249);
+            else MuonMotherDistribution -> Fill (pythia.event[MuonMother2].idAbs());
+
             //3.3. Find Muon from W
             if(pythia.event[MuonMother1].idAbs() == 24 || pythia.event[MuonMother2].idAbs() ==24){
                 MuonWpT -> Fill(pythia.event[i].pT());
                 MuonWeta -> Fill (pythia.event[i].eta());
                 MuonWetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
             }
+
             //3.4. Find first two leading muons
-            if (/*pythia.event[i].isFinal() &&*/ pythia.event[i].pT() > 0 && std::abs(pythia.event[i].eta()) < 5 ) {
+            if (pythia.event[i].pT()>0 && pythia.event[i].eta()<10 ) {
                 if (pythia.event[i].pT() > MuonpTtemp1 ) {
                     MuonpTtemp2 = MuonpTtemp1;
                     MuonIndex2 = MuonIndex1;
@@ -318,13 +328,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             // fill histograms
             
             if (pythia.event[i1].idAbs() == 13)
-            {
-                Vec4 p_i1 = pythia.event[i1].p();
-                Vec4 p_i2 = pythia.event[i2].p();
-                Vec4 p_i  = p_i1 + p_i2;
-                InvariantMass->Fill( p1.mCalc() );
-                
-                
+            {   
                 XPt->Fill(pythia.event[i].pT());
                 
                 double Pt_muon_i1 = pythia.event[i1].pT();
@@ -346,6 +350,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
             
         } //4. End of Poloarztion
+        
 
         
     }
@@ -356,15 +361,15 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     
     MuonCount -> Fill(iMuon);
     bCount -> Fill(ib);
-    bcutCount -> Fill(ibcut);
+    bcutCount -> Fill(ibprime);
     if(ib!=0) bevent++;
-    if (ibcut!=0) beventcut++;
     
     
     if (MuonIndex1 >0 && MuonIndex2 > 0 ){
     // 5. Fill pT and eta for two leading muons
     Muon1 = pythia.event[MuonIndex1];
     Muon2 = pythia.event[MuonIndex2];
+    bjet = pythia.event[bIndex];
     
     Muon1pT -> Fill(Muon1.pT());
     Muon1eta -> Fill (Muon1.eta());
@@ -374,20 +379,29 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     Muon2eta -> Fill (Muon2.eta());
     Muon2etapT -> Fill (Muon2.eta(),Muon2.pT());
     
+
     // 6. invirant mass of muon pairs
-    InvirantMass =  sqrt( - pow((Muon1.px()+Muon2.px()),2.0) - pow((Muon1.py()+Muon2.py()),2.0) - pow((Muon1.pz()+Muon2.pz()),2.0) + pow((Muon1.e()+Muon2.e()),2.0) );
-    IMass -> Fill(InvirantMass);
+    Vec4 polarRECOp = Muon1.p() + Muon2.p();
+    InvariantMass = polarRECOp.mCalc();
+    //InvirantMass =  sqrt( - pow((Muon1.px()+Muon2.px()),2.0) - pow((Muon1.py()+Muon2.py()),2.0) - pow((Muon1.pz()+Muon2.pz()),2.0) + pow((Muon1.e()+Muon2.e()),2.0) );
+    IMass -> Fill(InvariantMass);
+    IMass2 -> Fill((Muon1.p()+Muon2.p()+bjet.p()).mCalc());
     // 7. Delta R for muon pairs
     Deltaeta = std::abs(Muon1.eta() - Muon2.eta());
     Deltaphi = std::abs(Muon1.phi() - Muon2.phi());
     if (Deltaphi > 3.1415926) Deltaphi = 2*3.1415926 - Deltaphi;
     DeltaPhi -> Fill(Deltaphi);
     DeltaR -> Fill( sqrt( Deltaeta * Deltaeta + Deltaphi * Deltaphi ) );
-    RpT -> Fill (InvirantMass, sqrt( Deltaeta * Deltaeta + Deltaphi * Deltaphi ));
+    RpT -> Fill (InvariantMass, sqrt( Deltaeta * Deltaeta + Deltaphi * Deltaphi ));
+
+
+
+
+
     }
 	
     // 8. Fill root tree
-    T->Fill();
+    //T->Fill();
 
     // 9. Store event info in the LHAup object.
     myLHA.setEvent();
@@ -414,9 +428,9 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     pythia.stat();
     // -------------------------------------------------------------
     // Write tree.
-    T->Print();
-    T->Write();
-    T->Show(1);
+    //T->Print();
+    //T->Write();
+    //T->Show(1);
     
     MuonCount ->Write();
     MuonMotherDistribution ->Write();
@@ -436,13 +450,14 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     bpT->Write();
     beta->Write();
     betapT->Write();
-    bpTcut->Write();
-    betacut->Write();
-    betapTcut->Write();
+    heavyBpT->Write();
+    heavyBeta->Write();
+    heavyBetapT->Write();
     bCount -> Write();
     bcutCount -> Write();
     
     IMass -> Write();
+    IMass2 -> Write();
     DeltaPhi->Write();
     DeltaR ->Write();
     RpT ->Write();
@@ -453,10 +468,9 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     XPt->Write();
     leadingMuonPt->Write();
     trailingMuonPt->Write();
-    InvariantMass->Write();
 
 
-    delete  MuonCount;
+    delete MuonCount;
     delete MuonMotherDistribution;
     delete Muon1pT;
     delete Muon1eta;
@@ -474,13 +488,14 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     delete bpT;
     delete beta;
     delete betapT;
-    delete bpTcut;
-    delete betacut;
-    delete betapTcut;
+    delete heavyBpT;
+    delete heavyBeta;
+    delete heavyBetapT;
     delete bCount;
     delete bcutCount;
     
     delete IMass;
+    delete IMass2;
     delete DeltaPhi;
     delete DeltaR;
     delete RpT;
@@ -491,7 +506,6 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     delete XPt;
     delete leadingMuonPt;
     delete trailingMuonPt;
-    delete InvariantMass;
 
     delete file;
     // Write endtag. Overwrite initialization info with new cross sections.
