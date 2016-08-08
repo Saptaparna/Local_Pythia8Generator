@@ -16,7 +16,7 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 0.0
+#define mypolarization 1.0
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023

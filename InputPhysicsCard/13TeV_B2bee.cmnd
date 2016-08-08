@@ -42,7 +42,7 @@ Random:seed = 0
 ! 3) Beam parameter settings. Values below agree with default ones.
 Beams:idA = 2212                    ! first beam, p = 2212, pbar = -2212
 Beams:idB = 2212                    ! second beam, p = 2212, pbar = -2212
-Beams:eCM = 8000                    ! CM energy of collision
+Beams:eCM = 13000                    ! CM energy of collision
 
 
 !-------------------------------------------------------------------------
@@ -58,7 +58,7 @@ FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W 
 4900023:m0   = 29.0                 ! Set the mass of X
 4900023:mWidth = 0.5                ! Set the mass width of X
 4900023:onMode    = off             ! switch off decay modes
-4900023:onIfMatch = 13 -13          ! Force to X decay into muons
+4900023:onIfMatch = 11 -11          ! Force to X decay into muons
 !4900023:isResonance = on;          ! The X is On or off resonance
 
 
