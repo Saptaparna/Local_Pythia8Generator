@@ -69,7 +69,7 @@ endif
 
 
 # ROOT (turn off all warnings for readability).
-main91 EventGen : $$@.cc MyUserHooks.cpp $(PREFIX_LIB)/libpythia8.a
+main91 EventGen EventGen_ee: $$@.cc MyUserHooks.cpp $(PREFIX_LIB)/libpythia8.a
 ifeq ($(ROOT_USE),true)
 
 	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) -I$(HEPMC2_INCLUDE) $(CXX_COMMON)\
