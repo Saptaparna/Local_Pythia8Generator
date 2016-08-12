@@ -49,14 +49,14 @@ Beams:eCM = 13000                    ! CM energy of collision
 ! 4) Define Hard process
 
 FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W exchange
-7:m0 = 173                          ! B' mass  
-7:mWidth = 1                        ! B' mass width
+7:m0 = 173.3                          ! B' mass  
+7:mWidth = 1.35                       ! B' mass width
 7:onMode = off                      ! Switch off B' decay
 7:addChannel = 1 1.0 100 5 4900023  ! Add B'->X+b
 7:onIfAny = 4900023                 ! switch on B'->X+b
 4900023:mMin = 10                   ! Set the minmum mass of X
-4900023:m0   = 29.0                 ! Set the mass of X
-4900023:mWidth = 0.5                ! Set the mass width of X
+4900023:m0   = 28.7                 ! Set the mass of X
+4900023:mWidth = 1.29                ! Set the mass width of X
 4900023:onMode    = off             ! switch off decay modes
 4900023:onIfMatch = 11 -11          ! Force to X decay into muons
 !4900023:isResonance = on;          ! The X is On or off resonance
