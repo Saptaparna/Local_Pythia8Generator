@@ -38,6 +38,8 @@
 #include "TTree.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TClonesArray.h"
+
 
 // ROOT, for interactive graphics.
 #include "TVirtualPad.h"
@@ -94,15 +96,19 @@ int main(int argc, char* argv[]) {
 
 
 
-  // Extract settings to be used in the main program.
-  int    nEvent    = pythia.mode("Main:numberOfEvents");
-  int    nAbort    = pythia.mode("Main:timesAllowErrors");
+    // Extract settings to be used in the main program.
+    int    nEvent    = pythia.mode("Main:numberOfEvents");
+    int    nAbort    = pythia.mode("Main:timesAllowErrors");
 
     
     // Root Tree initiated
     Event *event = &pythia.event;
+    //TClonesArray* particles = (TClonesArray*)pythia.GetListOfParticles();
     TTree *T = new TTree("T","ev1 Tree");
     T->Branch("event",&event);
+    //T->Branch("particles",&particles);
+
+ 
 
     // Initialize UserHooks class in helicity_user_hook.cc & helicity_user_hook.h
     MyUserHooks* myUserHooks = new MyUserHooks(&pythia.info, true, mypolarization, myspinningparticle);
