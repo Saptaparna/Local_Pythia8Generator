@@ -49,8 +49,8 @@ Beams:eCM = 8000                    ! CM energy of collision
 ! 4) Define Hard process
 
 FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W exchange
-7:m0 = 173.3                          ! B' mass  
-7:mWidth = 1.35                        ! B' mass width
+7:m0 = 175                          ! B' mass  
+7:mWidth = 7.8                        ! B' mass width
 7:onMode = off                      ! Switch off B' decay
 7:addChannel = 1 1.0 100 5 4900023  ! Add B'->X+b
 7:onIfAny = 4900023                 ! switch on B'->X+b
