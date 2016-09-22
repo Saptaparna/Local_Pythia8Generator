@@ -16,7 +16,7 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 0.0
+#define mypolarization 9.0
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
     // Connect Pythia user hooks to the derived class
     
     // Initialization.
-     pythia.init();
+    pythia.init();
     // Store initialization info in the LHAup object.
     myLHA.setInit();
     // Write out this initialization info on the file.
@@ -160,16 +160,18 @@ int main(int argc, char* argv[]) {
     
     TH1F *IMass = new TH1F("IMass","Invariant mass of 2 leading Muons", 100, 0, 100);
     TH1F *DeltaR = new TH1F("DeltaR","Delt R between muons", 65, 0, 6.5);
+    TH1F *Deltaeta = new TH1F("Deltaeta","Delt eta between muons", 100, -5, 5);
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
+    TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,100, 65, 0, 6.5);
     
     TH1F *IMass2 = new TH1F("IMass2","Invariant mass of mu mu b", 100, 0, 300);
-    TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between polar and b", 65, 0, 6.5);
-    TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between polar and b", 65, 0, 6.5);
-    TH2F *RpT2 = new TH2F("RpT2", "pT:dR", 100,0,100, 65, 0, 6.5);
+ //   TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between polar and b", 65, 0, 6.5);
+ //   TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between polar and b", 65, 0, 6.5);
+ //   TH2F *RpT2 = new TH2F("RpT2", "pT:dR", 100,0,100, 65, 0, 6.5);
     
-    TH1F *JetpT = new TH1F("JetpT","Jet pT", 200, 0, 200);
-    TH1F *Jeteta = new TH1F("Jeteta","Jet eta", 100, -5, 5);
+ //   TH1F *JetpT = new TH1F("JetpT","Jet pT", 200, 0, 200);
+ //   TH1F *Jeteta = new TH1F("Jeteta","Jet eta", 100, -5, 5);
 
     
     // Root Tree initiated
@@ -206,8 +208,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     double iMuon = 0;
     int ib = 0;
     int ibprime =0;
-    double Deltaeta = -1;
-    double Deltaphi =-1;
+    double deltaeta = -1;
+    double deltaphi =-1;
 
     // Generate event.
     if (!pythia.next()) {
@@ -297,6 +299,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
         }
 
         // 4. Poloarztion
+        // DO NOT TOUCH
         // Select W+/- and veto final state radiation
         if (pythia.event[i].idAbs() == myspinningparticle )
         {
@@ -369,7 +372,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // 5. Fill pT and eta for two leading muons
     Muon1 = pythia.event[MuonIndex1];
     Muon2 = pythia.event[MuonIndex2];
-    bjet = pythia.event[bIndex];
+    //bjet = pythia.event[bIndex];
     
     Muon1pT -> Fill(Muon1.pT());
     Muon1eta -> Fill (Muon1.eta());
@@ -378,21 +381,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     Muon2pT -> Fill(Muon2.pT());
     Muon2eta -> Fill (Muon2.eta());
     Muon2etapT -> Fill (Muon2.eta(),Muon2.pT());
-    
 
+    
     // 6. invirant mass of muon pairs
-    Vec4 polarRECOp = Muon1.p() + Muon2.p();
-    InvariantMass = polarRECOp.mCalc();
+    Vec4 MuMu = Muon1.p() + Muon2.p();
+    InvariantMass = MuMu.mCalc();
     //InvirantMass =  sqrt( - pow((Muon1.px()+Muon2.px()),2.0) - pow((Muon1.py()+Muon2.py()),2.0) - pow((Muon1.pz()+Muon2.pz()),2.0) + pow((Muon1.e()+Muon2.e()),2.0) );
     IMass -> Fill(InvariantMass);
     IMass2 -> Fill((Muon1.p()+Muon2.p()+bjet.p()).mCalc());
     // 7. Delta R for muon pairs
-    Deltaeta = std::abs(Muon1.eta() - Muon2.eta());
-    Deltaphi = std::abs(Muon1.phi() - Muon2.phi());
-    if (Deltaphi > 3.1415926) Deltaphi = 2*3.1415926 - Deltaphi;
-    DeltaPhi -> Fill(Deltaphi);
-    DeltaR -> Fill( sqrt( Deltaeta * Deltaeta + Deltaphi * Deltaphi ) );
-    RpT -> Fill (InvariantMass, sqrt( Deltaeta * Deltaeta + Deltaphi * Deltaphi ));
+    deltaeta = std::abs(Muon1.eta() - Muon2.eta());
+    deltaphi = std::abs(Muon1.phi() - Muon2.phi());
+    if (deltaphi > 3.1415926) deltaphi = 2*3.1415926 - deltaphi;
+    Deltaeta -> Fill(deltaeta);
+    DeltaPhi -> Fill(deltaphi);
+    DeltaR -> Fill( sqrt( deltaeta * deltaeta + deltaphi * deltaphi ) );
+    MuMupT -> Fill(Muon1.pT()+ Muon2.pT()); 
+    RpT -> Fill (Muon1.pT()+ Muon2.pT(), sqrt( deltaeta * deltaeta + deltaphi * deltaphi ));
 
 
 
@@ -432,80 +437,45 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     //T->Write();
     //T->Show(1);
     
-    MuonCount ->Write();
-    MuonMotherDistribution ->Write();
-    Muon1pT ->Write();
-    Muon1eta ->Write();
-    Muon1etapT ->Write();
-    Muon2pT ->Write();
-    Muon2eta -> Write();
-    Muon2etapT ->Write();
-    MuonWpT ->Write();
-    MuonWeta ->Write();
-    MuonWetapT ->Write();
-    PolarpT ->Write();
-    Polareta -> Write();
-    PolaretapT ->Write();
+    MuonCount ->Write();    delete MuonCount;
+    MuonMotherDistribution ->Write();    delete MuonMotherDistribution;
+    Muon1pT ->Write();    delete Muon1pT;
+    Muon1eta ->Write();    delete Muon1eta;
+    Muon1etapT ->Write();    delete Muon1etapT;
+    Muon2pT ->Write();    delete Muon2pT;
+    Muon2eta -> Write();    delete Muon2eta;
+    Muon2etapT ->Write();    delete Muon2etapT;
+    MuonWpT ->Write();    delete MuonWpT;
+    MuonWeta ->Write();    delete MuonWeta;
+    MuonWetapT ->Write();    delete MuonWetapT;
+    PolarpT ->Write();    delete PolarpT;
+    Polareta -> Write();    delete Polareta;
+    PolaretapT ->Write();  delete PolaretapT;
     
-    bpT->Write();
-    beta->Write();
-    betapT->Write();
-    heavyBpT->Write();
-    heavyBeta->Write();
-    heavyBetapT->Write();
-    bCount -> Write();
-    bcutCount -> Write();
+    bpT->Write();    delete bpT;
+    beta->Write();    delete beta;
+    betapT->Write();    delete betapT;
+    heavyBpT->Write();    delete heavyBpT;
+    heavyBeta->Write();    delete heavyBeta;
+    heavyBetapT->Write();    delete heavyBetapT;
+    bCount -> Write();    delete bCount;
+    bcutCount -> Write();    delete bcutCount;
     
-    IMass -> Write();
-    IMass2 -> Write();
-    DeltaPhi->Write();
-    DeltaR ->Write();
-    RpT ->Write();
+    IMass -> Write();    delete IMass;
+    IMass2 -> Write();    delete IMass2;
+    DeltaPhi->Write();    delete DeltaPhi;
+    Deltaeta->Write();    delete Deltaeta;
+    DeltaR ->Write();    delete DeltaR;
+    MuMupT ->Write();    delete MuMupT;
+    RpT ->Write();    delete RpT;
     
-    pdgid -> Write();
+    pdgid -> Write();    delete pdgid;
 
-    cosDist->Write();
-    XPt->Write();
-    leadingMuonPt->Write();
-    trailingMuonPt->Write();
+    cosDist->Write();    delete cosDist;
+    XPt->Write();   delete XPt;
+    leadingMuonPt->Write();    delete leadingMuonPt;
+    trailingMuonPt->Write();    delete trailingMuonPt;
 
-
-    delete MuonCount;
-    delete MuonMotherDistribution;
-    delete Muon1pT;
-    delete Muon1eta;
-    delete Muon1etapT;
-    delete Muon2pT;
-    delete Muon2eta;
-    delete Muon2etapT;
-    delete MuonWpT;
-    delete MuonWeta;
-    delete MuonWetapT;
-    delete PolarpT;
-    delete Polareta;
-    delete PolaretapT;
-    
-    delete bpT;
-    delete beta;
-    delete betapT;
-    delete heavyBpT;
-    delete heavyBeta;
-    delete heavyBetapT;
-    delete bCount;
-    delete bcutCount;
-    
-    delete IMass;
-    delete IMass2;
-    delete DeltaPhi;
-    delete DeltaR;
-    delete RpT;
-    
-    delete pdgid;
-
-    delete cosDist;
-    delete XPt;
-    delete leadingMuonPt;
-    delete trailingMuonPt;
 
     delete file;
     // Write endtag. Overwrite initialization info with new cross sections.

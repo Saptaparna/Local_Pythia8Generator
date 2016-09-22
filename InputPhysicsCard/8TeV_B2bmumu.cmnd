@@ -64,12 +64,12 @@ FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W 
 
 !-------------------------------------------------------------------------
 ! 5) Hadronize switches
-!PartonLevel:all = off               ! stop after hard process
+PartonLevel:all = off               ! stop after hard process
 PartonLevel:MPI = off               ! no multiparton interactions
 PartonLevel:ISR = off               ! no initial-state radiation
 PartonLevel:FSR = off               ! no final-state radiation
-!HadronLevel:all = off               ! stop after parton level
-!HadronLevel:Hadronize = off         ! no hadronization
-!HadronLevel:Decay = off            ! no decays
+HadronLevel:all = off               ! stop after parton level
+HadronLevel:Hadronize = off         ! no hadronization
+HadronLevel:Decay = off            ! no decays
 
 
