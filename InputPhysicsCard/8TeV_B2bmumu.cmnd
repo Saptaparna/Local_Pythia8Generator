@@ -17,7 +17,7 @@
 
 !-------------------------------------------------------------------------
 ! 1) Settings that will be used in a main program.
-Main:numberOfEvents = 10000         ! number of events to generate
+Main:numberOfEvents = 50000         ! number of events to generate
 Main:timesAllowErrors = 5           ! abort run after this many flawed events
 
 !-------------------------------------------------------------------------
@@ -30,8 +30,8 @@ Init:showAllParticleData = off      ! list all particle data
 Next:numberCount = 100              ! print message every n events
 Next:numberShowLHA = 0              ! print LHA information n times
 Next:numberShowInfo = 1             ! print event information n times
-Next:numberShowProcess = 0         ! print process record n times
-Next:numberShowEvent = 10            ! print event record n times
+Next:numberShowProcess = 10         ! print process record n times
+Next:numberShowEvent = 1            ! print event record n times
 Stat:showPartonLevel = on           ! additional statistics on MPI
 Random:setSeed = on
 Random:seed = 0
@@ -49,8 +49,8 @@ Beams:eCM = 8000                    ! CM energy of collision
 ! 4) Define Hard process
 
 FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W exchange
-7:m0 = 175                          ! B' mass  
-7:mWidth = 7.8                        ! B' mass width
+7:m0 = 173.3                          ! B' mass  
+7:mWidth = 1.35                        ! B' mass width
 7:onMode = off                      ! Switch off B' decay
 7:addChannel = 1 1.0 100 5 4900023  ! Add B'->X+b
 7:onIfAny = 4900023                 ! switch on B'->X+b
@@ -64,12 +64,12 @@ FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W 
 
 !-------------------------------------------------------------------------
 ! 5) Hadronize switches
-PartonLevel:all = off               ! stop after hard process
+!PartonLevel:all = off               ! stop after hard process
 PartonLevel:MPI = off               ! no multiparton interactions
 PartonLevel:ISR = off               ! no initial-state radiation
 PartonLevel:FSR = off               ! no final-state radiation
-HadronLevel:all = off               ! stop after parton level
-HadronLevel:Hadronize = off         ! no hadronization
-HadronLevel:Decay = off            ! no decays
+!HadronLevel:all = off               ! stop after parton level
+!HadronLevel:Hadronize = off         ! no hadronization
+!HadronLevel:Decay = off            ! no decays
 
 

@@ -11,7 +11,12 @@
 // The main program contains no analysis; this is intended to happen later.
 // It therefore "never" has to be recompiled to handle different tasks.
 
-
+// Set the polarization type:
+// 1.0 = + (trans)
+// 0.0 = 0 (long)
+// -1.0 = - (trans)
+// 9.0 = scalar
+#define mypolarization 0.0
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023
@@ -19,8 +24,6 @@
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.
 #include <iostream>
-#include <string>
-
 #include <cmath>
 #include "MyUserHooks.hpp"
 #include "Pythia8/Pythia.h"
@@ -47,8 +50,6 @@
 using namespace Pythia8;
 
 int main(int argc, char* argv[]) {
-std::cout<<"argv 2 is "<< argv[2]<<std::endl;
-
 
   // Generator.
   Pythia pythia;  
@@ -65,23 +66,15 @@ std::cout<<"argv 2 is "<< argv[2]<<std::endl;
   // Create an LHAup object that can access relevant information in pythia.
   LHAupFromPYTHIA8 myLHA(&pythia.process, &pythia.info);
   // Open a file on which LHEF events should be stored, and write header.
-
-
-  // Set the polarization type:
-  // 1.0 = + (tran)
-  // 0.0 = 0 (long)
-  // -1.0 = - (tran)
-  // 9.0 = scal
+  myLHA.openLHEF("../OutputRawData/hardprocess.lhe");
   // Setup TFile to store root hist and root tree
-  double mypolarization = 9.0;  TFile *file=TFile::Open("../OutputRawData/scal.root","recreate");  myLHA.openLHEF("../OutputRawData/scal.lhe");
-  if (argv[2] == "long") { mypolarization=0.0; file-> Open("../OutputRawData/long.root","recreate");  myLHA.openLHEF("../OutputRawData/long.lhe");}
-  if (argv[2] == "tran") { mypolarization=1.0; file-> Open("../OutputRawData/tran.root","recreate");  myLHA.openLHEF("../OutputRawData/tran.lhe");}
+  TFile *file = TFile::Open("../OutputRawData/KinematicsHist.root","recreate");
 
 
   //TApplication theApp();
   //TApplication theApp("hist",1,"");
   // Check that correct number of command-line arguments
-  if (argc !=3) {
+  if (argc !=2) {
     cerr << " Unexpected number of command-line arguments. \n You are"
          << " expected to provide one input file name. \n"
          << " Program stopped! " << endl;
