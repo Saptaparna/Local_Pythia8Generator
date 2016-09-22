@@ -80,7 +80,6 @@ int main(int argc, char* argv[]) {
          << " Program stopped! " << endl;
     return 1;
   }
-
   // Check that the provided input name corresponds to an existing file.
   ifstream is(argv[1]);
   if (!is) {
@@ -99,7 +98,11 @@ int main(int argc, char* argv[]) {
   int    nEvent    = pythia.mode("Main:numberOfEvents");
   int    nAbort    = pythia.mode("Main:timesAllowErrors");
 
-
+    
+    // Root Tree initiated
+    Event *event = &pythia.event;
+    TTree *T = new TTree("T","ev1 Tree");
+    T->Branch("event",&event);
 
     // Initialize UserHooks class in helicity_user_hook.cc & helicity_user_hook.h
     MyUserHooks* myUserHooks = new MyUserHooks(&pythia.info, true, mypolarization, myspinningparticle);
@@ -166,18 +169,7 @@ int main(int argc, char* argv[]) {
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,100, 65, 0, 6.5);
     
     TH1F *IMass2 = new TH1F("IMass2","Invariant mass of mu mu b", 100, 0, 300);
- //   TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between polar and b", 65, 0, 6.5);
- //   TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between polar and b", 65, 0, 6.5);
- //   TH2F *RpT2 = new TH2F("RpT2", "pT:dR", 100,0,100, 65, 0, 6.5);
-    
- //   TH1F *JetpT = new TH1F("JetpT","Jet pT", 200, 0, 200);
- //   TH1F *Jeteta = new TH1F("Jeteta","Jet eta", 100, -5, 5);
 
-    
-    // Root Tree initiated
-    //TTree *T = new TTree("T","ev1 Tree");
-    //Event *thisevent = &pythia.event;
-    //T->Branch("event", &thisevent);
 
     //...................................................................................
     //...................................................................................    
@@ -212,17 +204,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     double deltaphi =-1;
 
     // Generate event.
-    if (!pythia.next()) {
-      // If failure because reached end of file then exit event loop.
-      if (pythia.info.atEndOfFile()) {
-        cout << " Aborted since reached end of Les Houches Event File \n";
-        break;
-      }
-      // First few failures write off as "acceptable" errors, then quit.
-      if (++iAbort < nAbort) continue;
-        cout << " Event generation aborted prematurely, owing to error! \n";
-      break;
-    }
+    if (!pythia.next()) continue;
+    T->Fill();
 
     
     //---------------------------particle Loop-------------------------------------------
@@ -398,15 +381,9 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     DeltaR -> Fill( sqrt( deltaeta * deltaeta + deltaphi * deltaphi ) );
     MuMupT -> Fill(Muon1.pT()+ Muon2.pT()); 
     RpT -> Fill (Muon1.pT()+ Muon2.pT(), sqrt( deltaeta * deltaeta + deltaphi * deltaphi ));
-
-
-
-
-
     }
 	
-    // 8. Fill root tree
-    //T->Fill();
+
 
     // 9. Store event info in the LHAup object.
     myLHA.setEvent();
@@ -426,6 +403,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
     
 }
+
     
 //------------------Event Loop ends-------------------------------------------
     
@@ -433,9 +411,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     pythia.stat();
     // -------------------------------------------------------------
     // Write tree.
-    //T->Print();
-    //T->Write();
-    //T->Show(1);
+    T->Print();
+    T->Write();
     
     MuonCount ->Write();    delete MuonCount;
     MuonMotherDistribution ->Write();    delete MuonMotherDistribution;
@@ -492,63 +469,3 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
 
 
-
-
-
-
-/*
- MuonSpectrum -> Fill(pythia.event[i].e());
- MuonMass -> Fill(pythia.event[i].m());
- if(pythia.event[i].pT()>3) MuonpT -> Fill(pythia.event[i].pT());
- Muoneta -> Fill(pythia.event[i].eta());
- 
- ThisIsHiggs= (pythia.event[i].idAbs() == 25);
- if (ThisIsHiggs) {
- ThisHiggs2muons = ThisIsHiggs && ( pythia.event[i].daughter1() != pythia.event[i].daughter2());
- if (ThisHiggs2muons) {
- 
- MuonIndex1 = pythia.event[i].daughter1();
- MuonIndex2 = pythia.event[i].daughter2();
- 
- Muon1 = pythia.event[MuonIndex1];
- Muon2 = pythia.event[MuonIndex2];
- InvirantMass =  sqrt( - pow((Muon1.px()+Muon2.px()),2.0) - pow((Muon1.py()+Muon2.py()),2.0) - pow((Muon1.pz()+Muon2.pz()),2.0) + pow((Muon1.e()+Muon2.e()),2.0) );
- 
- cout << "A higgs -> muons found !!!  Higgs# = " << i << " m0="<<pythia.event[i].m()<< " ,muon# ="<< MuonIndex1 <<" "<<MuonIndex2 << " ,Invirant mass is "<< InvirantMass <<endl;
- 
- //mult->Fill(InvirantMass);
- eta.fill(InvirantMass);
- }
- }
- 
- 
- 
- if (pythia.event[i].idAbs() == 25){
- cout << "This particle " << i << " is Higgs " ;
- cout << " and its m=" << pythia.event[i].m() << " ,e=" << pythia.event[i].e() << " ,dot1=" << pythia.event[i].daughter1()<< " ,dot2=" << pythia.event[i].daughter2()<< endl;
- iTop = i;}
- 
- if (pythia.event[i].isFinal() && pythia.event[i].isCharged()) ++nCharged;
- 
- if (pythia.event[i].idAbs() == 13){
- cout << "This particle " << i << " is muon " ;
- cout << " and its pT=" << pythia.event[i].pT() << " ,e=" << pythia.event[i].e() << " ,mother1=" << pythia.event[i].mother1()<< " ,mother2=" << pythia.event[i].mother2()<< endl;}
- 
- if (pythia.event[i].idAbs() == 6){
- cout << "This particle " << i << " is top " ;
- cout << " and its m=" << pythia.event[i].m() << " ,e=" << pythia.event[i].e() << " ,daughter1=" << pythia.event[i].daughter1()<< " ,daughter2=" << pythia.event[i].daughter2()<< endl;}
- */
-
-
-
-
-//pT.fill( pythia.event[iTop].pT() );
-//eta.fill( pythia.event[iTop].eta() );
-//-------------------------------------------------------------
-//End of event loop. Statistics.
-
-
-
-
-
-//cout << pT << eta;

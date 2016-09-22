@@ -59,7 +59,7 @@ $(PREFIX_LIB)/libpythia8.a :
 ################################################################################
 ################################################################################
 
-EventGen EventGen_ee: $$@.cc MyUserHooks.cpp $(PREFIX_LIB)/libpythia8.a
+ EventGen_ee: $$@.cc MyUserHooks.cpp $(PREFIX_LIB)/libpythia8.a
 ifeq ($(ROOT_USE),true)
 
 	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) -I$(HEPMC2_INCLUDE) $(CXX_COMMON)\
@@ -70,27 +70,27 @@ else
 endif
 
 
-main92: $$@.cc $(PREFIX_LIB)/libpythia8.a Pythia8Dict.so
+EventGen: $$@.cc MyUserHooks.cpp $(PREFIX_LIB)/libpythia8.a MyLinkDef.so
 ifeq ($(ROOT_USE),true)
-	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) $(CXX_COMMON)\
+	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) -I$(HEPMC2_INCLUDE) $(CXX_COMMON)\
+	 -L$(HEPMC2_LIB) -Wl,-rpath,$(HEPMC2_LIB) -lHepMC\
 	 `$(ROOTBIN)root-config --cflags` -Wl,-rpath,./\
 	 -Wl,-rpath,$(ROOT_LIB) `$(ROOT_BIN)root-config --glibs`
 else
 	@echo "Error: $@ requires ROOT"
 endif
-Pythia8Dict.so: Pythia8Dict.cc $(PREFIX_LIB)/libpythia8.a
+MyLinkDef.so: MyPythiaDct.cc $(PREFIX_LIB)/libpythia8.a
 	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) $(CXX_SHARED) $(CXX_COMMON)\
 	 `$(ROOTBIN)root-config --cflags`
-Pythia8Dict.cc: main92.h Pythia8Link.h 
+MyPythiaDct.cc: pythia.h MyLinkDef.h 
 	export LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(ROOT_LIB);\
 	 $(ROOT_BIN)rootcint -f $@ -c -I$(PREFIX_INCLUDE) $^
 
 
 
 
+
 # Clean.
 clean:
-	rm -f weakbosons.lhe; rm -f Pythia8.promc; rm -f hist.root;
-	rm -f *~; rm -f \#*; rm -f core*; rm -f *Dct.*
-	rm -f $(EXE) hist.root pythiaDict.* ;
+	@rm -f *~; rm -f \#*; rm -f core*; rm -f *Dct.*
 	rm -f Pythia8Dict.h Pythia8Dict.cc *.so main92 EventGen;
