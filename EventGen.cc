@@ -16,7 +16,7 @@
 // 0.0 = 0 (long)
 // -1.0 = - (trans)
 // 9.0 = scalar
-#define mypolarization 9.0
+
 // 4900023 for Zd
 // 34 for W'
 #define myspinningparticle 4900023
@@ -25,6 +25,7 @@
 // Therefore large event samples may be impractical.
 #include <iostream>
 #include <cmath>
+#include <string>
 #include "MyUserHooks.hpp"
 #include "Pythia8/Pythia.h"
 #include "Pythia8Plugins/HepMC2.h"
@@ -68,15 +69,16 @@ int main(int argc, char* argv[]) {
   // Create an LHAup object that can access relevant information in pythia.
   LHAupFromPYTHIA8 myLHA(&pythia.process, &pythia.info);
   // Open a file on which LHEF events should be stored, and write header.
-  myLHA.openLHEF("../OutputRawData/hardprocess.lhe");
+  //myLHA.openLHEF("../OutputRawData/hardprocess.lhe");
   // Setup TFile to store root hist and root tree
-  TFile *file = TFile::Open("../OutputRawData/KinematicsHist.root","recreate");
+  TFile *file = new TFile;
+  //TFile *file = TFile::Open("../OutputRawData/KinematicsHist.root","recreate");
 
 
   //TApplication theApp();
   //TApplication theApp("hist",1,"");
   // Check that correct number of command-line arguments
-  if (argc !=2) {
+  if (argc !=3) {
     cerr << " Unexpected number of command-line arguments. \n You are"
          << " expected to provide one input file name. \n"
          << " Program stopped! " << endl;
@@ -91,15 +93,21 @@ int main(int argc, char* argv[]) {
 
   // Confirm that external files will be used for input and output.
   cout << "\n >>> PYTHIA settings will be read from file " << argv[1] << " <<< \n" << endl;
+  
+  double mypolarization;
+  if(atoi(argv[2])==0) 
+    { mypolarization = 0.0; TFile *file = TFile::Open("../OutputRawData/long.root","recreate"); myLHA.openLHEF("../OutputRawData/long.lhe");}
+  else if (atoi(argv[2])==1) 
+    { mypolarization = 1.0; TFile *file = TFile::Open("../OutputRawData/tran.root","recreate"); myLHA.openLHEF("../OutputRawData/tran.lhe");}
+  else
+    { mypolarization = 9.0; TFile *file = TFile::Open("../OutputRawData/scal.root","recreate"); myLHA.openLHEF("../OutputRawData/scal.lhe");}
 
 
 
-
-
-    // Extract settings to be used in the main program.
+// Extract settings to be used in the main program.
     int    nEvent    = pythia.mode("Main:numberOfEvents");
-    int    nAbort    = pythia.mode("Main:timesAllowErrors");
-
+    int    nAbort    = pythia.mode("Main:timesAllowErrors");    
+    
     
     // Root Tree initiated
     Event *event = &pythia.event;
@@ -172,7 +180,7 @@ int main(int argc, char* argv[]) {
     TH1F *Deltaeta = new TH1F("Deltaeta","Delt eta between muons", 100, -5, 5);
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
-    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,100, 65, 0, 6.5);
+    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200, 65, 0, 6.5);
     
     TH1F *IMass2 = new TH1F("IMass2","Invariant mass of mu mu b", 100, 0, 300);
 
