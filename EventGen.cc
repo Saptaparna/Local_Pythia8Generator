@@ -19,7 +19,7 @@
 
 // 4900023 for Zd
 // 34 for W'
-#define myspinningparticle 4900023
+#define myspinningparticle 25
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.

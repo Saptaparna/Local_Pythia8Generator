@@ -19,7 +19,7 @@
     gStyle->SetOptStat(0);
     TCanvas *playground1 = new TCanvas("playground1","playground1",1200,600);
     TCanvas *playground2 = new TCanvas("playground2","playground2",1200,600);
-    TCanvas *playground3 = new TCanvas("playground3","playground3",1200,300);
+    //TCanvas *playground3 = new TCanvas("playground3","playground3",1200,300);
 
     //-----------------------Start IO Files-----------------------
     TFile *TransverseRootFile = new TFile(TransverseFILE);
@@ -125,6 +125,20 @@
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
 
+    playground1->cd(6);
+        
+        TH1F *Tran = (TH1F*)TransverseRootFile.Get("IMass");
+        TH1F *Long = (TH1F*)LongitudinalRootFile.Get("IMass");
+        TH1F *Scal = (TH1F*)ScalarRootFile.Get("IMass");
+        
+        Tran -> SetLineColor(4);
+        Tran -> GetXaxis() ->SetTitle("m_mumu");
+        Tran -> GetYaxis() ->SetTitle("Count");
+        Tran -> Draw();
+        Long -> SetLineColor(2);
+        Long -> Draw("same");
+        Scal -> SetLineColor(1);
+        Scal -> Draw("same");
 
 
         
@@ -138,12 +152,12 @@
         TH1F *Long = (TH1F*)LongitudinalRootFile.Get("Deltaeta");
         TH1F *Scal = (TH1F*)ScalarRootFile.Get("Deltaeta");
         
-        Tran -> SetLineColor(4);
-        Tran -> GetXaxis() ->SetTitle("Deltaeta_mumu");
-        Tran -> GetYaxis() ->SetTitle("Count");
-        Tran -> Draw();
         Long -> SetLineColor(2);
-        Long -> Draw("same");
+        Long -> GetXaxis() ->SetTitle("Delteta_mumu");
+        Long -> GetYaxis() ->SetTitle("Count");
+        Long -> Draw();
+        Tran -> SetLineColor(4);
+        Tran -> Draw("same");
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
 
@@ -153,27 +167,26 @@
         TH1F *Long = (TH1F*)LongitudinalRootFile.Get("DeltaPhi");
         TH1F *Scal = (TH1F*)ScalarRootFile.Get("DeltaPhi");
         
-        Tran -> SetLineColor(4);
-        Tran -> GetXaxis() ->SetTitle("DeltaPhi_mumu");
-        Tran -> GetYaxis() ->SetTitle("Count");
-        Tran -> Draw();
         Long -> SetLineColor(2);
-        Long -> Draw("same");
+        Long -> GetXaxis() ->SetTitle("DeltaPhi_mumu");
+        Long -> GetYaxis() ->SetTitle("Count");
+        Long -> Draw();
+        Tran -> SetLineColor(4);
+        Tran -> Draw("same");
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
-
       playground2->cd(3);
         
         TH1F *Tran = (TH1F*)TransverseRootFile.Get("DeltaR");
         TH1F *Long = (TH1F*)LongitudinalRootFile.Get("DeltaR");
         TH1F *Scal = (TH1F*)ScalarRootFile.Get("DeltaR");
         
-        Tran -> SetLineColor(4);
-        Tran -> GetXaxis() ->SetTitle("DeltaR_mumu");
-        Tran -> GetYaxis() ->SetTitle("Count");
-        Tran -> Draw();
         Long -> SetLineColor(2);
-        Long -> Draw("same");
+        Long -> GetXaxis() ->SetTitle("DeltaR_mumu");
+        Long -> GetYaxis() ->SetTitle("Count");
+        Long -> Draw();
+        Tran -> SetLineColor(4);
+        Tran -> Draw("same");
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
 
@@ -207,14 +220,14 @@
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
 
-        TH1F *Tran = (TH1F*)TransverseRootFile.Get("IMass");
-        TH1F *Long = (TH1F*)LongitudinalRootFile.Get("IMass");
-        TH1F *Scal = (TH1F*)ScalarRootFile.Get("IMass");
+        TH1F *Tran = (TH1F*)TransverseRootFile.Get("IMass2");
+        TH1F *Long = (TH1F*)LongitudinalRootFile.Get("IMass2");
+        TH1F *Scal = (TH1F*)ScalarRootFile.Get("IMass2");
       
       playground2->cd(6);
         
         Tran -> SetLineColor(4);
-        Tran -> GetXaxis() ->SetTitle("m_mumu");
+        Tran -> GetXaxis() ->SetTitle("m_bmumu");
         Tran -> GetYaxis() ->SetTitle("Count");
         Tran -> Draw();
         Long -> SetLineColor(2);
