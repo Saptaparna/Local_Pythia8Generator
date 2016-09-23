@@ -1,0 +1,75 @@
+! Explanation: 
+!
+!   q + q'->B + q''
+!           |
+!            --> b + X
+!                    |
+!                     --> mu + mu     
+!
+! This Pythia 8 card defines PRoduction and decay of Heavy B quark
+! heavy B quark is produced via t-channel intermediated by W: qq'->Bq''
+! heavy B quark decayse to ordinary b and X, where X is either a vector or a scalar
+! X has m=29 GeV and mWidth=0.5GeV, and decay to mumu or ee
+! X is also boosted
+! X is produced with companion of a b-jet
+!
+!
+
+!-------------------------------------------------------------------------
+! 1) Settings that will be used in a main program.
+Main:numberOfEvents = 50000         ! number of events to generate
+Main:timesAllowErrors = 5           ! abort run after this many flawed events
+
+!-------------------------------------------------------------------------
+! 2) Settings related to output in init(), next() and stat().
+Init:showChangedSettings = on       ! list changed settings
+Init:showAllSettings = off          ! list all settings
+Init:showChangedParticleData = on   ! list changed particle data
+Init:showAllParticleData = off      ! list all particle data
+!Init:showChangedResonanceData = on  ! also print changed resonance data
+Next:numberCount = 100              ! print message every n events
+Next:numberShowLHA = 0              ! print LHA information n times
+Next:numberShowInfo = 1             ! print event information n times
+Next:numberShowProcess = 10         ! print process record n times
+Next:numberShowEvent = 1            ! print event record n times
+Stat:showPartonLevel = on           ! additional statistics on MPI
+Random:setSeed = on
+Random:seed = 0
+
+
+
+!-------------------------------------------------------------------------
+! 3) Beam parameter settings. Values below agree with default ones.
+Beams:idA = 2212                    ! first beam, p = 2212, pbar = -2212
+Beams:idB = 2212                    ! second beam, p = 2212, pbar = -2212
+Beams:eCM = 8000                    ! CM energy of collision
+
+
+!-------------------------------------------------------------------------
+! 4) Define Hard process
+
+FourthBottom:qq2bPrimeq(t:W) = on   ! t-channel production of B'(pdgid=7) via W exchange
+7:m0 = 173.3                          ! B' mass  
+7:mWidth = 1.35                       ! B' mass width
+7:onMode = off                      ! Switch off B' decay
+7:addChannel = 1 1.0 100 5 4900023  ! Add B'->X+b
+7:onIfAny = 4900023                 ! switch on B'->X+b
+4900023:mMin = 10                   ! Set the minmum mass of X
+4900023:m0   = 28.7                 ! Set the mass of X
+4900023:mWidth = 1.29                ! Set the mass width of X
+4900023:onMode    = off             ! switch off decay modes
+4900023:onIfMatch = 11 -11          ! Force to X decay into muons
+!4900023:isResonance = on;          ! The X is On or off resonance
+
+
+!-------------------------------------------------------------------------
+! 5) Hadronize switches
+!PartonLevel:all = off               ! stop after hard process
+PartonLevel:MPI = off               ! no multiparton interactions
+PartonLevel:ISR = off               ! no initial-state radiation
+PartonLevel:FSR = off               ! no final-state radiation
+!HadronLevel:all = off               ! stop after parton level
+!HadronLevel:Hadronize = off         ! no hadronization
+!HadronLevel:Decay = off            ! no decays
+
+
