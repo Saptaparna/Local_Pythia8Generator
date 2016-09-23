@@ -69,7 +69,7 @@ PartonLevel:MPI = off               ! no multiparton interactions
 PartonLevel:ISR = off               ! no initial-state radiation
 PartonLevel:FSR = off               ! no final-state radiation
 HadronLevel:all = off               ! stop after parton level
-!HadronLevel:Hadronize = off         ! no hadronization
-!HadronLevel:Decay = off            ! no decays
+HadronLevel:Hadronize = off         ! no hadronization
+HadronLevel:Decay = off            ! no decays
 
 

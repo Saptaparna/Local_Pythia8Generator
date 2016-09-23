@@ -241,7 +241,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 ibprime ++;
             }
 
-        if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()==7 ){
+        if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
             bpT -> Fill(pythia.event[i].pT());
             beta -> Fill (pythia.event[i].eta());
             betapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
@@ -369,7 +369,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // 5. Fill pT and eta for two leading muons
     Muon1 = pythia.event[MuonIndex1];
     Muon2 = pythia.event[MuonIndex2];
-    //bjet = pythia.event[bIndex];
+    bjet = pythia.event[bIndex];
     
     Muon1pT -> Fill(Muon1.pT());
     Muon1eta -> Fill (Muon1.eta());

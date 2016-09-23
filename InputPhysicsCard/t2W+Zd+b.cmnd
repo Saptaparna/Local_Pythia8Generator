@@ -9,7 +9,7 @@
 !-------------------------------------------------------------------------
 ! 1) Settings that will be used in a main program.
 
-Main:numberOfEvents = 50000          ! number of events to generate
+Main:numberOfEvents = 10000          ! number of events to generate
 Main:timesAllowErrors = 5          ! abort run after this many flawed events
 
 
@@ -30,6 +30,8 @@ Next:numberShowInfo = 1             ! print event information n times
 Next:numberShowProcess = 10          ! print process record n times
 Next:numberShowEvent = 1            ! print event record n times
 Stat:showPartonLevel = on           ! additional statistics on MPI
+Random:setSeed = on
+Random:seed = 0
 
 
 
@@ -38,11 +40,11 @@ Stat:showPartonLevel = on           ! additional statistics on MPI
 
 Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
 Beams:idB = -2212                   ! second beam, p = 2212, pbar = -2212
-Beams:eCM = 8000                   ! CM energy of collision
-4900023:mMin = 10                  ! Set the minmum mass of higgs
-4900023:m0   = 29.0                ! Set the mass of higgs
-4900023:mWidth = 0.5
-4900023:7:MeMode = 102
+Beams:eCM = 13000                   ! CM energy of collision
+!4900023:mMin = 10                  ! Set the minmum mass of higgs
+4900023:m0   = 28.7                ! Set the mass of higgs
+4900023:mWidth = 1.9
+!4900023:7:MeMode = 102
 
 Top:qq2tq(t:W) = on                !Single Top production via t channel Switch on Top production
 6:onMode = off
