@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 
 
 
-// Extract settings to be used in the main program.
+    // Extract settings to be used in the main program.
     int    nEvent    = pythia.mode("Main:numberOfEvents");
     int    nAbort    = pythia.mode("Main:timesAllowErrors");    
     
@@ -132,12 +132,12 @@ int main(int argc, char* argv[]) {
     myLHA.initLHEF();
 
     
-    //===================================================================================
-    //===================================================================================
-    //===================================================================================
-    // Start booking root hist and root tree 
-    //...................................................................................
-    //...................................................................................
+//===================================================================================
+//===================================================================================
+//===================================================================================
+// Start booking root hist and root tree 
+//...................................................................................
+//...................................................................................
 
     // Book hist for Polarization
     TH1F *cosDist = new TH1F( "cos(theta)_Z", "cos(theta)_Z", 50, -1.0, 1.0);
@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
     // Finishing booking root hist and root tree 
     //===================================================================================
     //===================================================================================
-    //===================================================================================
+//===================================================================================
 
 
     int iTop = 0;
@@ -214,17 +214,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     double iMuon = 0;
     int ib = 0;
     int ibprime =0;
+    int ipolar=0;
     double deltaeta = -1;
     double deltaphi =-1;
 
     // Generate event.
     if (!pythia.next()) continue;
+    for (int i = 0; i < pythia.event.size();  i++) 
+        { if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()) 
+            ipolar++;
+        }
+    //std::cout<<"ipolar="<<ipolar<<std::endl;
+  if(ipolar==1){  
     T->Fill();
-
-    
     //---------------------------particle Loop-------------------------------------------
     //...................................................................................
     //...................................................................................  
+
 
     for (int i = 0; i < pythia.event.size();  i++) {
         // 1. All Final state particles
@@ -413,18 +419,18 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // Write the HepMC event to file. Done with it.
     //ascii_io << hepmcevt;
     //delete hepmcevt;
-
+  }
 
     
 }
-
-    
 //------------------Event Loop ends-------------------------------------------
     
-    cout<< "The b event count is " << bevent << " , the cut the b event count is " << beventcut << endl;
     pythia.stat();
-    // -------------------------------------------------------------
-    // Write tree.
+//===================================================================================
+//===================================================================================
+//===================================================================================
+// Write root and LHE
+//...................................................................................
     T->Print();
     T->Write();
     
@@ -472,8 +478,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // Write endtag. Overwrite initialization info with new cross sections.
     myLHA.closeLHEF(true);
     delete myUserHooks;
-
-    //----------------------------------------------------------
+//----------------------------------------------------------
 
   // Done.
   return 0;
