@@ -9,7 +9,7 @@
 !-------------------------------------------------------------------------
 ! 1) Settings that will be used in a main program.
 
-Main:numberOfEvents = 50000          ! number of events to generate
+Main:numberOfEvents = 10000          ! number of events to generate
 Main:timesAllowErrors = 5          ! abort run after this many flawed events
 
 
@@ -30,6 +30,8 @@ Next:numberShowInfo = 1             ! print event information n times
 Next:numberShowProcess = 10          ! print process record n times
 Next:numberShowEvent = 1            ! print event record n times
 Stat:showPartonLevel = on           ! additional statistics on MPI
+Random:setSeed = on
+Random:seed = 0
 
 
 
@@ -39,19 +41,20 @@ Stat:showPartonLevel = on           ! additional statistics on MPI
 Beams:idA = 2212                   ! first beam, p = 2212, pbar = -2212
 Beams:idB = -2212                   ! second beam, p = 2212, pbar = -2212
 Beams:eCM = 8000                   ! CM energy of collision
-34:mMin = 10                  ! Set the minmum mass of higgs
-34:m0   = 29.0                ! Set the mass of higgs
-34:mWidth = 0.5
-34:7:MeMode = 102
+4900023:m0   = 28.7                ! Set the mass of higgs
+4900023:mWidth = 1.9
+4900023:mMin=12
+4900023:mMax=75
+!4900023:7:MeMode = 102
 
 Top:qq2tq(t:W) = on                !Single Top production via t channel Switch on Top production
 6:onMode = off
-6:addChannel = 1 1.0 100 5 34
-6:onIfAny = 34
+6:addChannel = 1 1.0 100 24 5 4900023
+6:onIfAny = 4900023
 
-34:onMode    = off                 ! switch off decay modes
-34:onIfMatch = 13 14              ! Force to dark photon decay into muons
-!4900024:8:all = 1 1.0 100 13 14        ! Turn Set the mumu brunching Ratio to be 1
+4900023:onMode    = off                 ! switch off decay modes
+4900023:onIfMatch = 13 -13              ! Force to dark photon decay into muons
+4900023:8:all = 1 1.0 100 13 -13        ! Turn Set the mumu brunching Ratio to be 1
 !4900023:isResonance = on;              ! The Dark photon is On or off resonance
 
 
@@ -60,9 +63,9 @@ Top:qq2tq(t:W) = on                !Single Top production via t channel Switch o
 PartonLevel:MPI = off               ! no multiparton interactions
 PartonLevel:ISR = off              ! no initial-state radiation
 PartonLevel:FSR = off              ! no final-state radiation
-!HadronLevel:all = off              ! stop after parton level
-!HadronLevel:Hadronize = off        ! no hadronization
-!HadronLevel:Decay = off            ! no decays
+HadronLevel:all = off              ! stop after parton level
+HadronLevel:Hadronize = off        ! no hadronization
+HadronLevel:Decay = off            ! no decays
 
 
 !---------------------------------------------------------------------------

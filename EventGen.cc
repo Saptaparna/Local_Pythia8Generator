@@ -19,6 +19,7 @@
 
 // 4900023 for Zd
 // 34 for W'
+// 25 for higgs
 #define myspinningparticle 25
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
