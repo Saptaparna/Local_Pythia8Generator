@@ -40,9 +40,10 @@ Beams:eCM = 8000                    ! CM energy of collision
 ! 4) Define Hard process
 
 HiggsSM:gg2Httbar = on
-25:mMin = 10                   ! Set the minmum mass of X
 25:m0   = 28.7                 ! Set the mass of X
 25:mWidth = 1.9                ! Set the mass width of X
+25:mMin=12
+25:mMax=75
 25:onMode    = off             ! switch off decay modes
 25:onIfMatch = 13 -13          ! Force to X decay into muons
 

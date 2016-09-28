@@ -181,6 +181,7 @@ int main(int argc, char* argv[]) {
     TH1F *Deltaeta = new TH1F("Deltaeta","Delt eta between muons", 100, -5, 5);
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
+    TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 50, 0, 8);
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200, 65, 0, 6.5);
     
     TH1F *IMass2 = new TH1F("IMass2","Invariant mass of mu mu b", 100, 0, 300);
@@ -401,6 +402,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     DeltaPhi -> Fill(deltaphi);
     DeltaR -> Fill( sqrt( deltaeta * deltaeta + deltaphi * deltaphi ) );
     MuMupT -> Fill(Muon1.pT()+ Muon2.pT()); 
+    MuMupTratio -> Fill ((Muon1.pT()+ Muon2.pT())/InvariantMass);
     RpT -> Fill (Muon1.pT()+ Muon2.pT(), sqrt( deltaeta * deltaeta + deltaphi * deltaphi ));
     }
 	
@@ -465,6 +467,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     Deltaeta->Write();    delete Deltaeta;
     DeltaR ->Write();    delete DeltaR;
     MuMupT ->Write();    delete MuMupT;
+    MuMupTratio -> Write(); delete MuMupTratio;
     RpT ->Write();    delete RpT;
     
     pdgid -> Write();    delete pdgid;
