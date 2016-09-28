@@ -18,10 +18,10 @@ Init:showAllSettings = off          ! list all settings
 Init:showChangedParticleData = on   ! list changed particle data
 Init:showAllParticleData = off      ! list all particle data
 !Init:showChangedResonanceData = on  ! also print changed resonance data
-Next:numberCount = 100              ! print message every n events
+Next:numberCount = 1000              ! print message every n events
 Next:numberShowLHA = 0              ! print LHA information n times
 Next:numberShowInfo = 1             ! print event information n times
-Next:numberShowProcess = 10         ! print process record n times
+Next:numberShowProcess = 1         ! print process record n times
 Next:numberShowEvent = 1            ! print event record n times
 Stat:showPartonLevel = on           ! additional statistics on MPI
 Random:setSeed = on
@@ -52,6 +52,7 @@ Top:gg2ttbar = on
 25:mMax=75
 25:onMode    = off             ! switch off decay modes
 25:onIfMatch = 13 -13          ! Force to X decay into muons
+25:doForceWidth = 1
 
 !-------------------------------------------------------------------------
 ! 5) Hadronize switches
