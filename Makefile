@@ -82,7 +82,7 @@ endif
 MyLinkDef.so: MyPythiaDct.cc $(PREFIX_LIB)/libpythia8.a
 	$(CXX) $^ -o $@ -w -I$(ROOT_INCLUDE) $(CXX_SHARED) $(CXX_COMMON)\
 	 `$(ROOTBIN)root-config --cflags`
-MyPythiaDct.cc: pythia.h MyLinkDef.h 
+MyPythiaDct.cc: MyPythia.h MyLinkDef.h 
 	export LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(ROOT_LIB);\
 	 $(ROOT_BIN)rootcint -f $@ -c -I$(PREFIX_INCLUDE) $^
 

@@ -31,7 +31,7 @@ extern void G__set_cpp_environmentMyPythiaDct();
 
 #include "TObject.h"
 #include "TMemberInspector.h"
-#include "pythia.h"
+#include "MyPythia.h"
 #include <algorithm>
 namespace std { }
 using namespace std;
