@@ -50,3 +50,4 @@ cmsDriver.py step3 --filein file:HeavyB2bX_13TeV_TranMuMu_AOD.root  --fileout fi
 
 
 
+cmsDriver.py Configuration/Generator/python/PYTHIA8_heavyB2Xb_mumu_13TeV_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1 -n 5 --no_exec

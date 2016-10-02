@@ -20,7 +20,7 @@
 // 4900023 for Zd
 // 34 for W'
 // 25 for higgs
-#define myspinningparticle 25
+#define myspinningparticle 4900023
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.
@@ -198,8 +198,8 @@ int main(int argc, char* argv[]) {
     int iTop = 0;
     int iAbort = 0;
     bool ThisIsPolar;
-    int bevent=0;
-    int beventcut=0;
+    int iPassPhaseCutEvent=0;
+    //int beventcut=0;
     
 ////////////////////////////////////////////////////////////////////////
 // Begin event loop.
@@ -219,15 +219,37 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     int ipolar=0;
     double deltaeta = -1;
     double deltaphi =-1;
+    bool PassPhaseCutb = 1;
+    bool PassPhaseCutMuon1,PassPhaseCutMuon2;
+
 
     // Generate event.
     if (!pythia.next()) continue;
     for (int i = 0; i < pythia.event.size();  i++) 
-        { if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()) 
-            ipolar++;
+        { 
+            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()) ipolar++;
+            if (pythia.event[i].idAbs()==13 && pythia.event[i].mother1()!=pythia.event[i].mother2()) {
+                if (pythia.event[i].pT() > MuonpTtemp1 ) {
+                    MuonpTtemp2 = MuonpTtemp1;
+                    MuonIndex2 = MuonIndex1;
+                    MuonpTtemp1 = pythia.event[i].pT();
+                    MuonIndex1 = i;
+                }
+                else if (pythia.event[i].pT() > MuonpTtemp2) {
+                    MuonpTtemp2 = pythia.event[i].pT();
+                    MuonIndex2 = i;
+                }
+            } // find out index of leading trailing muon
+            if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
+                PassPhaseCutb = PassPhaseCutb * (pythia.event[i].pT()>30 && abs(pythia.event[i].eta())<2.4);
+                //bIndex =i;
+            } // find out index of b
+
         }
     //std::cout<<"ipolar="<<ipolar<<std::endl;
-  if(ipolar==1){  
+    PassPhaseCutMuon1 = pythia.event[MuonIndex1].pT()>25 && abs(pythia.event[MuonIndex1].eta())<2.1;
+    PassPhaseCutMuon2 = pythia.event[MuonIndex2].pT()>25 && abs(pythia.event[MuonIndex2].eta())<2.1;
+  if(ipolar==1 && PassPhaseCutMuon1 && PassPhaseCutMuon2 && PassPhaseCutb){  
     T->Fill();
     //---------------------------particle Loop-------------------------------------------
     //...................................................................................
@@ -242,26 +264,25 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
         }
         // 2. B->b+polar
 
-        if (pythia.event[i].idAbs() == 7) {
+        if (pythia.event[i].idAbs() == 7 && pythia.event[i].mother1()!=pythia.event[i].mother2()) {
                 heavyBpT -> Fill(pythia.event[i].pT());
                 heavyBeta -> Fill (pythia.event[i].eta());
                 heavyBetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
                 ibprime ++;
             }
 
-        if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
-            bpT -> Fill(pythia.event[i].pT());
-            beta -> Fill (pythia.event[i].eta());
-            betapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
-            ib ++;
-            bIndex =i;
+        if (pythia.event[i].idAbs() == 5 && pythia.event[i].mother1()!=pythia.event[i].mother2()){
+                bpT -> Fill(pythia.event[i].pT());
+                beta -> Fill (pythia.event[i].eta());
+                betapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
+                ib++;
         }
 
         // use place of Polar to store spinning particle
-        if(pythia.event[i].idAbs() == myspinningparticle){
-            PolarpT -> Fill(pythia.event[i].pT());
-            Polareta -> Fill (pythia.event[i].eta());
-            PolaretapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
+        if (pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()){
+                PolarpT -> Fill(pythia.event[i].pT());
+                Polareta -> Fill (pythia.event[i].eta());
+                PolaretapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
         }
 
 
@@ -288,19 +309,6 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 MuonWetapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
             }
 
-            //3.4. Find first two leading muons
-            if (pythia.event[i].pT()>0 && pythia.event[i].eta()<10 ) {
-                if (pythia.event[i].pT() > MuonpTtemp1 ) {
-                    MuonpTtemp2 = MuonpTtemp1;
-                    MuonIndex2 = MuonIndex1;
-                    MuonpTtemp1 = pythia.event[i].pT();
-                    MuonIndex1 = i;
-                }
-                else if (pythia.event[i].pT() > MuonpTtemp2) {
-                    MuonpTtemp2 = pythia.event[i].pT();
-                    MuonIndex2 = i;
-                }
-            }
         }
 
         // 4. Poloarztion
@@ -366,11 +374,10 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     //...................................................................................  
     //----------------------particle Loop ends-------------------------------------------
     
-    
+    iPassPhaseCutEvent++;
     MuonCount -> Fill(iMuon);
     bCount -> Fill(ib);
     bcutCount -> Fill(ibprime);
-    if(ib!=0) bevent++;
     
     
     if (MuonIndex1 >0 && MuonIndex2 > 0 ){
@@ -482,6 +489,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // Write endtag. Overwrite initialization info with new cross sections.
     myLHA.closeLHEF(true);
     delete myUserHooks;
+    cout<< "number of event pass phase cut is " << iPassPhaseCutEvent <<endl;
 //----------------------------------------------------------
 
   // Done.
