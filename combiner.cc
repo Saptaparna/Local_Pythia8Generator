@@ -15,11 +15,16 @@
 
 
 {
+    gStyle->SetTitleFontSize(0.07);
     gStyle->SetPalette(1);
     gStyle->SetOptStat(0);
+    //gStyle->SetLabelSize(0.8,"X");
+    //gStyle->SetTitleXSize(5);
+    
+    
     TCanvas *playground1 = new TCanvas("playground1","playground1",1200,600);
     TCanvas *playground2 = new TCanvas("playground2","playground2",1200,600);
-    //TCanvas *playground3 = new TCanvas("playground3","playground3",1200,300);
+    TCanvas *playground3 = new TCanvas("playground3","playground3",800,600);
 
     //-----------------------Start IO Files-----------------------
     TFile *TransverseRootFile = new TFile(TransverseFILE);
@@ -54,6 +59,11 @@
         Long -> SetLineColor(2);
         Long -> GetXaxis() ->SetTitle("pT_mu1");
         Long -> GetYaxis() ->SetTitle("Count");
+        Long->GetXaxis()->SetLabelSize(0.055);
+        Long->GetXaxis()->SetTitleSize(0.055);
+        Long->GetXaxis()->SetTitleOffset(0.9);
+        Long->GetYaxis()->SetLabelSize(0.05);
+        Long->GetYaxis()->SetTitleSize(0.05);
         Long -> Draw();
         Tran -> SetLineColor(4);
         Tran -> Draw("same");
@@ -70,6 +80,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("pT_mu2");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -87,6 +102,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("pT_mumu");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -103,6 +123,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("eta_mu1");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -119,6 +144,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("eta_mu2");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -134,6 +164,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("m_mumu");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -155,6 +190,11 @@
         Long -> SetLineColor(2);
         Long -> GetXaxis() ->SetTitle("Delteta_mumu");
         Long -> GetYaxis() ->SetTitle("Count");
+        Long->GetXaxis()->SetLabelSize(0.055);
+        Long->GetXaxis()->SetTitleSize(0.055);
+        Long->GetXaxis()->SetTitleOffset(0.85);
+        Long->GetYaxis()->SetLabelSize(0.05);
+        Long->GetYaxis()->SetTitleSize(0.05);
         Long -> Draw();
         Tran -> SetLineColor(4);
         Tran -> Draw("same");
@@ -170,11 +210,17 @@
         Long -> SetLineColor(2);
         Long -> GetXaxis() ->SetTitle("DeltaPhi_mumu");
         Long -> GetYaxis() ->SetTitle("Count");
+        Long->GetXaxis()->SetLabelSize(0.055);
+        Long->GetXaxis()->SetTitleSize(0.055);
+        Long->GetXaxis()->SetTitleOffset(0.85);
+        Long->GetYaxis()->SetLabelSize(0.05);
+        Long->GetYaxis()->SetTitleSize(0.05);
         Long -> Draw();
         Tran -> SetLineColor(4);
         Tran -> Draw("same");
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
+        
       playground2->cd(3);
         
         TH1F *Tran = (TH1F*)TransverseRootFile.Get("DeltaR");
@@ -184,6 +230,11 @@
         Long -> SetLineColor(2);
         Long -> GetXaxis() ->SetTitle("DeltaR_mumu");
         Long -> GetYaxis() ->SetTitle("Count");
+        Long->GetXaxis()->SetLabelSize(0.055);
+        Long->GetXaxis()->SetTitleSize(0.055);
+        Long->GetXaxis()->SetTitleOffset(0.85);
+        Long->GetYaxis()->SetLabelSize(0.05);
+        Long->GetYaxis()->SetTitleSize(0.05);
         Long -> Draw();
         Tran -> SetLineColor(4);
         Tran -> Draw("same");
@@ -199,6 +250,11 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("pT_b");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -214,21 +270,31 @@
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("eta_b");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
-
+        
+        
+      playground2->cd(6);
         TH1F *Tran = (TH1F*)TransverseRootFile.Get("IMass2");
         TH1F *Long = (TH1F*)LongitudinalRootFile.Get("IMass2");
         TH1F *Scal = (TH1F*)ScalarRootFile.Get("IMass2");
-      
-      playground2->cd(6);
         
         Tran -> SetLineColor(4);
         Tran -> GetXaxis() ->SetTitle("m_bmumu");
         Tran -> GetYaxis() ->SetTitle("Count");
+        Tran->GetXaxis()->SetLabelSize(0.055);
+        Tran->GetXaxis()->SetTitleSize(0.055);
+        Tran->GetXaxis()->SetTitleOffset(0.9);
+        Tran->GetYaxis()->SetLabelSize(0.05);
+        Tran->GetYaxis()->SetTitleSize(0.05);
         Tran -> Draw();
         Long -> SetLineColor(2);
         Long -> Draw("same");
@@ -270,8 +336,31 @@
         Scal -> SetLineColor(1);
         Scal -> Draw("same");
     */
-  
+        
+    playground3->cd();
+        
+        TH1F *Tran = (TH1F*)TransverseRootFile.Get("MuMupTratio");
+        TH1F *Long = (TH1F*)LongitudinalRootFile.Get("MuMupTratio");
+        TH1F *Scal = (TH1F*)ScalarRootFile.Get("MuMupTratio");
+        
+        Long -> SetLineColor(2);
+        Long -> GetXaxis() ->SetTitle("(pT/M)_mumu");
+        Long -> GetYaxis() ->SetTitle("Count");
+        Long->GetXaxis()->SetLabelSize(0.055);
+        Long->GetXaxis()->SetTitleSize(0.055);
+        Long->GetXaxis()->SetTitleOffset(0.9);
+        Long->GetYaxis()->SetLabelSize(0.05);
+        Long->GetYaxis()->SetTitleSize(0.05);
+        Long -> Draw();
+        Tran -> SetLineColor(4);
+        Tran -> Draw("same");
+        Scal -> SetLineColor(1);
+        Scal -> Draw("same");
+
+        
+        
+        
     playground1->SaveAs("1muons.pdf");
     playground2->SaveAs("2separation.pdf");
-    //playground3->SaveAs("3mass.pdf");
+    playground3->SaveAs("3mass.pdf");
 }

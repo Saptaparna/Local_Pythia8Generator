@@ -20,6 +20,7 @@
 // 4900023 for Zd
 // 34 for W'
 // 25 for higgs
+// #define myspinningparticle 25
 #define myspinningparticle 4900023
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
@@ -242,14 +243,13 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             } // find out index of leading trailing muon
             if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
                 PassPhaseCutb = PassPhaseCutb * (pythia.event[i].pT()>30 && abs(pythia.event[i].eta())<2.4);
-                //bIndex =i;
             } // find out index of b
 
         }
     //std::cout<<"ipolar="<<ipolar<<std::endl;
     PassPhaseCutMuon1 = pythia.event[MuonIndex1].pT()>25 && abs(pythia.event[MuonIndex1].eta())<2.1;
     PassPhaseCutMuon2 = pythia.event[MuonIndex2].pT()>25 && abs(pythia.event[MuonIndex2].eta())<2.1;
-  if(ipolar==1 && PassPhaseCutMuon1 && PassPhaseCutMuon2 && PassPhaseCutb){  
+  if(ipolar==1 && PassPhaseCutMuon1 && PassPhaseCutMuon2 /*&& PassPhaseCutb*/){  
     T->Fill();
     //---------------------------particle Loop-------------------------------------------
     //...................................................................................
@@ -275,6 +275,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 bpT -> Fill(pythia.event[i].pT());
                 beta -> Fill (pythia.event[i].eta());
                 betapT -> Fill (pythia.event[i].eta(),pythia.event[i].pT());
+                bIndex =i;
                 ib++;
         }
 
