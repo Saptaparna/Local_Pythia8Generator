@@ -10,6 +10,7 @@
 
 // WARNING: typically one needs 25 MB/100 events at the LHC.
 // Therefore large event samples may be impractical.
+#include <fstream>
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -43,17 +44,17 @@ int main(int argc, char* argv[]) {
   // Read in commands from external file.
   pythia.readFile(argv[1]);
 
-
+    ofstream eventsfeatures; 
     TFile *file = new TFile;
     cout << "\n >>> PYTHIA settings will be read from file " << argv[1] << " <<< \n" << endl;
     double mypolarization;
     if(atoi(argv[2])==0) 
-      { mypolarization = 0.0; TFile *file = TFile::Open("../OutputRawData/long.root","recreate");}
+      { mypolarization = 0.0; TFile *file = TFile::Open("../OutputRawData/long.root","recreate"); eventsfeatures.open("../OutputRawData/long.txt");}
     else if (atoi(argv[2])==1) 
-      { mypolarization = 1.0; TFile *file = TFile::Open("../OutputRawData/tran.root","recreate");}
+      { mypolarization = 1.0; TFile *file = TFile::Open("../OutputRawData/tran.root","recreate"); eventsfeatures.open("../OutputRawData/tran.txt");}
     else
-      { mypolarization = 9.0; TFile *file = TFile::Open("../OutputRawData/scal.root","recreate");}
-
+      { mypolarization = 9.0; TFile *file = TFile::Open("../OutputRawData/scal.root","recreate"); eventsfeatures.open("../OutputRawData/scal.txt");}
+    eventsfeatures << "index, pT_mu1, eta_mu1, pT_mu2, eta_mu2, pT_X, eta_X, pT_b, eta_b, DeltaR_mumu, M_dimuon, DeltaR_bdimuon, M_bdimuon, pT_dimuon, (pT/M)_dimuon, (pT_mu1+pT_mu2)/m_dimuon" << endl;
 
 
     // Extract settings to be used in the main program.
@@ -163,7 +164,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     bool PassPhaseCutb = 1;
     bool PassPhaseCutMuon =1;
 
-    PassPhaseCutMuon = muon[0].pT()>MUONPTCUT && muon[1].pT()>MUONPTCUT && abs(muon[0].eta())>MUONETACUT && abs(muon[1].pT())>MUONETACUT;
+    PassPhaseCutMuon = muon[0].pT()>MUONPTCUT && muon[1].pT()>MUONPTCUT && abs(muon[0].eta())<MUONETACUT && abs(muon[1].eta())<MUONETACUT;
     PassPhaseCutb = bjet[0].pT()> BPTCUT && abs(bjet[0].eta()) < BETACUT;
 
     //for (int i=0; i<4 ; i++) { PassPhaseCutMuon = PassPhaseCutMuon && abs(muon[i].eta()) < MUONETACUT;}
@@ -171,10 +172,16 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
     // cout<< " number of b is " << ib <<endl;
     
-    if(PassPhaseCutMuon && PassPhaseCutb ){  
+    if(PassPhaseCutMuon && PassPhaseCutb ){
+
+            //cout<< "pdg id" << muon[0].idAbs()<<endl;
+            //cout<< "pdg id" << muon[1].idAbs()<<endl;
+            
+
             iPassPhaseCutEvent++;
             if(abs(muon[0].eta())<0.9 && abs(muon[1].eta())<0.9) iCentralMuon = 2;
             if(abs(muon[0].eta())>0.9 && abs(muon[1].eta())>0.9) iCentralMuon = 0;
+            if((abs(muon[0].eta())>0.9 && abs(muon[1].eta())<0.9)|| (abs(muon[0].eta())<0.9 && abs(muon[1].eta())>0.9))iCentralMuon = 1;
             NumberTMuon -> Fill(iCentralMuon);
 
 
@@ -206,9 +213,10 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             Deltaeta -> Fill(deltaeta[0]);
             DeltaPhi -> Fill(deltaphi[0]);
             DeltaR -> Fill(deltar[0]);
-            MuMupT -> Fill(muon[0].pT()+ muon[1].pT()); 
-            MuMupTratio -> Fill ((muon[0].pT()+ muon[1].pT())/invariantmass[0]);
-            RpT -> Fill (muon[0].pT()+ muon[1].pT(), deltar[0]);
+
+            MuMupT -> Fill(  (muon[0].p()+ muon[1].p()).pT() - polar[0].pT() ); 
+            MuMupTratio -> Fill ( (muon[0].p()+ muon[1].p()).pT() /invariantmass[0]);
+            RpT -> Fill ( (muon[0].p()+ muon[1].p()).pT(), deltar[0]);
 
 
             deltaeta2[0] = std::abs(polar[0].eta() - bjet[0].eta());
@@ -221,12 +229,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             DeltaPhi2 -> Fill(deltaphi2[0]);
             DeltaR2 -> Fill(deltar2[0]);
 
+            //-- fill txt file
+            eventsfeatures << iPassPhaseCutEvent<<", ";
+            eventsfeatures << muon[0].pT()<<", "<<muon[0].eta()<<", ";
+            eventsfeatures << muon[1].pT()<<", "<<muon[1].eta()<<", ";
+            eventsfeatures << polar[0].pT()<<", "<<polar[0].eta()<<", ";
+            eventsfeatures << bjet[0].pT()<<", "<<bjet[0].eta()<<", ";
+            eventsfeatures << deltar[0] << ", " << invariantmass[0] << ", ";
+            eventsfeatures << deltar2[0] << ", " << invariantmass2[0] << ", ";
+            eventsfeatures << (muon[0].p()+ muon[1].p()).pT() <<", "<< (muon[0].p()+ muon[1].p()).pT() /invariantmass[0]  <<", "<< (muon[0].pT()+ muon[1].pT()) /invariantmass[0] <<endl; 
+            // done with fill txt file
 
         }    
     }    
 //------------------Event Loop ends-------------------------------------------
     
     pythia.stat();
+
     T->Print();
     T->Write();
     NumberTMuon -> Write(); delete NumberTMuon;
@@ -263,6 +282,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
     delete file;
     delete myUserHooks;
+    eventsfeatures.close();
     cout<< "number of event pass phase cut is " << iPassPhaseCutEvent <<endl;
 //----------------------------------------------------------
 
