@@ -3,7 +3,7 @@
 #define myheavyparticle 7
 #define MUONPTCUT 25
 #define MUONETACUT 2.1 
-//25GeV,  2.4 for CMS, 2.1 for dimuon ana 
+//25GeV,2.1 for dimuon ana 
 #define BPTCUT 30
 #define BETACUT 2.5
 //30GeV 2.5 for dimuon ana 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
     TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 50, 0, 8);
-    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200, 65, 0, 6.5);    
+    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200,65,0,6.5);    
 
 
 // Finishing booking root hist and root tree 
@@ -119,7 +119,6 @@ int main(int argc, char* argv[]) {
     int iTop = 0;
     int iAbort = 0;
     int iPassPhaseCutEvent=0;
-    int iCentralMuon=1;
     //int beventcut=0;
     
 ////////////////////////////////////////////////////////////////////////
@@ -144,7 +143,9 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 heavyb[iheavyb]=pythia.event[pythia.event[i].mother1()];
                 ipolar++; 
                 iheavyb++;
+            }
 
+            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[pythia.event[i].daughter1()].idAbs() ==13 ){
                 if (pythia.event[pythia.event[i].daughter1()].pT() > pythia.event[pythia.event[i].daughter2()].pT()){
                     muon[imuon]= pythia.event[pythia.event[i].daughter1()]; imuon++;
                     muon[imuon]= pythia.event[pythia.event[i].daughter2()]; imuon++;
@@ -153,8 +154,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                     muon[imuon]= pythia.event[pythia.event[i].daughter2()]; imuon++;
                     muon[imuon]= pythia.event[pythia.event[i].daughter1()]; imuon++;
                 }
-                 
             }
+
             if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
                 bjet[ib]=pythia.event[i];
                 ib++;
@@ -179,10 +180,10 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             
 
             iPassPhaseCutEvent++;
-            if(abs(muon[0].eta())<0.9 && abs(muon[1].eta())<0.9) iCentralMuon = 2;
-            if(abs(muon[0].eta())>0.9 && abs(muon[1].eta())>0.9) iCentralMuon = 0;
-            if((abs(muon[0].eta())>0.9 && abs(muon[1].eta())<0.9)|| (abs(muon[0].eta())<0.9 && abs(muon[1].eta())>0.9))iCentralMuon = 1;
-            NumberTMuon -> Fill(iCentralMuon);
+            int iSideMuon=0;
+            if(abs(muon[0].eta())>0.9)  iSideMuon++;
+            if(abs(muon[1].eta())>0.9)  iSideMuon++;
+            NumberTMuon -> Fill(iSideMuon);
 
 
             //T->Fill();
@@ -214,7 +215,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             DeltaPhi -> Fill(deltaphi[0]);
             DeltaR -> Fill(deltar[0]);
 
-            MuMupT -> Fill(  (muon[0].p()+ muon[1].p()).pT() - polar[0].pT() ); 
+            MuMupT -> Fill(  (muon[0].p()+ muon[1].p()).pT()  ); 
             MuMupTratio -> Fill ( (muon[0].p()+ muon[1].p()).pT() /invariantmass[0]);
             RpT -> Fill ( (muon[0].p()+ muon[1].p()).pT(), deltar[0]);
 
