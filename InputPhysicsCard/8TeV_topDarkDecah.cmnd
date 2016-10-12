@@ -9,7 +9,7 @@
 !-------------------------------------------------------------------------
 ! 1) Settings that will be used in a main program.
 
-Main:numberOfEvents = 100000          ! number of events to generate
+Main:numberOfEvents = 7000          ! number of events to generate
 Main:timesAllowErrors = 5          ! abort run after this many flawed events
 
 
@@ -43,17 +43,21 @@ Beams:idB = -2212                   ! second beam, p = 2212, pbar = -2212
 Beams:eCM = 8000                   ! CM energy of collision
 
 Top:qq2tq(t:W) = on                !Single Top production via t channel Switch on Top production
-6:onMode = off
-6:addChannel = 1 1.0 100 5 24 25
-6:onIfAny = 25
 
-25:m0   = 28.7                 ! Set the mass of X
-25:mWidth = 1.9                ! Set the mass width of X
-25:mMin=12
-25:mMax=75
-25:onMode    = off             ! switch off decay modes
-25:onIfMatch = 13 -13          ! Force to X decay into muons
-25:doForceWidth = 1
+6:onMode = off
+6:addChannel = 1 1.0 100 24 5 4900023
+6:onIfAny = 4900023
+
+
+!----
+
+4900023:m0   = 28.7                 ! Set the mass of X
+4900023:mWidth = 1.9                ! Set the mass width of X
+4900023:mMin=12
+4900023:mMax=75
+4900023:onMode    = off             ! switch off decay modes
+4900023:onIfMatch = 13 -13          ! Force to X decay into muons
+4900023:doForceWidth = 1
 
 
 

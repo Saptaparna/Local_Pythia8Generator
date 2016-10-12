@@ -1,5 +1,6 @@
 
-#define myspinningparticle 25
+#define myspinningparticle 4900023
+// 25 higgs
 #define myheavyparticle 7
 #define MUONPTCUT 25
 #define MUONETACUT 2.1 
