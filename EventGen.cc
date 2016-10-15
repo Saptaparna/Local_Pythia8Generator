@@ -1,5 +1,5 @@
 
-#define myspinningparticle 4900023
+#define myspinningparticle 25
 // 25 higgs
 #define myheavyparticle 7
 #define MUONPTCUT 25
@@ -174,11 +174,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
     // cout<< " number of b is " << ib <<endl;
     
-    if(PassPhaseCutMuon && PassPhaseCutb ){
-
-            //cout<< "pdg id" << muon[0].idAbs()<<endl;
-            //cout<< "pdg id" << muon[1].idAbs()<<endl;
-            
+    //if( PassPhaseCutMuon && PassPhaseCutb ){
+    if( 1 ){
 
             iPassPhaseCutEvent++;
             int iSideMuon=0;
@@ -239,7 +236,7 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             eventsfeatures << bjet[0].pT()<<", "<<bjet[0].eta()<<", ";
             eventsfeatures << deltar[0] << ", " << invariantmass[0] << ", ";
             eventsfeatures << deltar2[0] << ", " << invariantmass2[0] << ", ";
-            eventsfeatures << (muon[0].p()+ muon[1].p()).pT() <<", "<< (muon[0].p()+ muon[1].p()).pT() /invariantmass[0]  <<", "<< (muon[0].pT()+ muon[1].pT()) /invariantmass[0] <<endl; 
+            eventsfeatures << (muon[0].p()+ muon[1].p()).pT() <<", "<< (muon[0].p()+ muon[1].p()).pT() /invariantmass[0]  <<endl; 
             // done with fill txt file
 
         }    
