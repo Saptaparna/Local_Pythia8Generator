@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
     TH1F *heavyBpT = new TH1F("heavyBpT","heavy b pT", 100, 0, 200);
     TH1F *heavyBeta = new TH1F("heavyBeta","heavy b eta", 100, -5, 5);
     TH2F *heavyBetapT = new TH2F("heavyBetapT", "heavy b eta:pT", 100,-5,5,100, 0, 200);
-    TH1F *IMassbmumu = new TH1F("IMassbmumu","Invariant mass of mu mu b", 100, 0, 300);
+    TH1F *IMassbmumu = new TH1F("IMassbmumu","Invariant mass of mu mu b", 60, 0, 300);
     TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between b-dimuon", 65, 0, 6.5);
     TH1F *Deltaeta2 = new TH1F("Deltaeta2","Delt eta between b-dimuon", 100, -5, 5);
     TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between b-dimuon", 65, 0, 6.5);
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     TH1F *Deltaeta = new TH1F("Deltaeta","Delt eta between muons", 100, -5, 5);
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
-    TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 50, 0, 8);
+    TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 40, 0, 8);
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200,65,0,6.5);    
 
 
