@@ -47,7 +47,7 @@ Top:gg2ttbar = on
 6:onNegIfAny = 5
 
 25:m0   = 28.7                 ! Set the mass of X
-25:mWidth = 1.9                ! Set the mass width of X
+25:mWidth = 1.9              ! Set the mass width of X 1.9
 25:mMin=12
 25:mMax=75
 25:onMode    = off             ! switch off decay modes
@@ -65,3 +65,12 @@ HadronLevel:Hadronize = off         ! no hadronization
 HadronLevel:Decay = off            ! no decays
 
 
+6:onMode = off
+6:addChannel = 2 1.0 100 4900023 4
+6:onIfAny = 4900023
+4900023:m0   = 28.7                 ! Set the mass of X
+4900023:mWidth = 1.9              ! Set the mass width of X 1.9
+4900023:mMin=12
+4900023:mMax=75
+4900023:onMode    = off             ! switch off decay modes
+4900023:onIfMatch = 13 -13          ! Force to X decay into muons
