@@ -54,8 +54,14 @@ cmsDriver.py Configuration/Generator/python/PYTHIA8_heavyB2Xb_mumu_13TeV_cff.py 
 
 
 
-cmsDriver.py PYTHIA8_heavyB2Xb_mumu_13TeV_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  --python_filename=HeavyB2bX_13TeV_TranMuMu_SIM.py -n 5 --no_exec
+cmsDriver.py PYTHIA8_heavyB2Xb_mumu_13TeV_cff.py --mc --eventcontent RAWSIM --customise SLHCUpgradeSimulations/Configuration/postLS1Customs.customisePostLS1,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM --conditions MCRUN2_71_V1::All --beamspot NominalCollision2015 --step GEN,SIM --magField 38T_PostLS1  -n 5 --no_exec --python_filename=HeavyB2bX_13TeV_TranMuMu_SIM.py
 
 
 crab submit -c crabConfig_tutorial_MC_generation.py
 crab status
+
+
+./ntuple_8TeV_multicrab -c submit -o '--dryrun --skip-estimates'
+./ntuple_8TeV_multicrab -c proceed -w 2012_Data_Multicrab
+./ntuple_8TeV_multicrab -c status -w 2012_Data_Multicrab
+./ntuple_8TeV_multicrab -c resubmit -w 2012_Data_Multicrab
