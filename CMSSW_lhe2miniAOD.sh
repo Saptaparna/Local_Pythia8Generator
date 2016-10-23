@@ -61,7 +61,8 @@ crab submit -c crabConfig_tutorial_MC_generation.py
 crab status
 
 
-./ntuple_8TeV_multicrab -c submit -o '--dryrun --skip-estimates'
+./ntuple_8TeV_multicrab -c submit
+'--dryrun --skip-estimates'
 ./ntuple_8TeV_multicrab -c proceed -w 2012_Data_Multicrab
 ./ntuple_8TeV_multicrab -c status -w 2012_Data_Multicrab
 ./ntuple_8TeV_multicrab -c resubmit -w 2012_Data_Multicrab

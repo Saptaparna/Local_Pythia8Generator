@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
       { mypolarization = 1.0; TFile *file = TFile::Open("../OutputRawData/tran.root","recreate"); eventsfeatures.open("../OutputRawData/tran.txt");}
     else
       { mypolarization = 9.0; TFile *file = TFile::Open("../OutputRawData/scal.root","recreate"); eventsfeatures.open("../OutputRawData/scal.txt");}
-    eventsfeatures << "index,pT_mu1,eta_mu1,pT_mu2,eta_mu2,pT_X,eta_X,pT_b,eta_b,DeltaR_mumu,M_dimuon,DeltaR_bdimuon,M_bdimuon,pT_dimuon,(pT/M)_dimuon,(pT_mu1+pT_mu2)/m_dimuon" << endl;
+    eventsfeatures << "index,pT_mu1,eta_mu1,pT_mu2,eta_mu2,pT_X,eta_X,pT_b,eta_b,DeltaR_mumu,M_dimuon,DeltaR_bdimuon,M_bdimuon,pT_dimuon,(pT/M)_dimuon" << endl;
 
 
     // Extract settings to be used in the main program.
@@ -174,8 +174,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
     // cout<< " number of b is " << ib <<endl;
     
-    //if( PassPhaseCutMuon && PassPhaseCutb ){
-    if( 1 ){
+    if( PassPhaseCutMuon && PassPhaseCutb ){
+    //if( 1 ){
 
             iPassPhaseCutEvent++;
             int iSideMuon=0;
