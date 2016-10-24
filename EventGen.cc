@@ -14,6 +14,8 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <algorithm>
 #include <string>
 #include "MyUserHooks.hpp"
 #include "Pythia8/Pythia.h"
@@ -55,7 +57,7 @@ int main(int argc, char* argv[]) {
       { mypolarization = 1.0; TFile *file = TFile::Open("../OutputRawData/tran.root","recreate"); eventsfeatures.open("../OutputRawData/tran.txt");}
     else
       { mypolarization = 9.0; TFile *file = TFile::Open("../OutputRawData/scal.root","recreate"); eventsfeatures.open("../OutputRawData/scal.txt");}
-    eventsfeatures << "index,pT_mu1,eta_mu1,pT_mu2,eta_mu2,pT_X,eta_X,pT_b,eta_b,DeltaR_mumu,M_dimuon,DeltaR_bdimuon,M_bdimuon,pT_dimuon,(pT/M)_dimuon" << endl;
+    eventsfeatures << "index,pT_mu1st,pT_mu2nd,,pT_mu3rd,pT_mu4th,delta_polars,pT_mu1,eta_mu1,pT_mu2,eta_mu2,pT_X,eta_X,pT_b,eta_b,DeltaR_mumu,M_dimuon,DeltaR_bdimuon,M_bdimuon,pT_dimuon,(pT/M)_dimuon" << endl;
 
 
     // Extract settings to be used in the main program.
@@ -82,6 +84,13 @@ int main(int argc, char* argv[]) {
 //===================================================================================
 // Start booking root hist and root tree 
     TH1F *NumberTMuon = new TH1F("NumberTMuon","NumberTMuon", 4, -0.5, 3.5);
+ 
+ 
+    TH1F *DeltaRPolars = new TH1F("DeltaRPolars","Delt R between dimuons", 65, 0, 6.5);
+    TH1F *MuonFirstpT = new TH1F("MuonFirstpT","MuonFirst pT", 80, 0, 160);
+    TH1F *MuonSecondpT = new TH1F("MuonSecondpT","MuonSecond pT", 80, 0, 160);
+    TH1F *MuonThirdpT = new TH1F("MuonThirdpT","MuonThird pT", 80, 0, 160);
+    TH1F *MuonForthpT = new TH1F("MuonForthpT","MuonForth pT", 80, 0, 160);  
 
     TH1F *Muon1pT = new TH1F("Muon1pT","Muon1 pT", 80, 0, 160);
     TH1F *Muon1eta = new TH1F("Muon1eta","Muon1 eta", 100, -5, 5);
@@ -127,26 +136,26 @@ int main(int argc, char* argv[]) {
 for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
     int imuon=0,ipolar=0,ib=0,iheavyb=0;
-    Particle muon[2]; 
-    Particle bjet[1];
-    Particle polar[1];
-    Particle heavyb[1];
+    Particle muon[4]; 
+    Particle bjet[2];
+    Particle polar[2];
+    Particle heavyb[2];
     Particle temp;
+    vector<double> vct_muonpT;
 
     double invariantmass[1],deltaeta[1],deltaphi[1],deltar[1];
     double invariantmass2[1],deltaeta2[1],deltaphi2[1],deltar2[1];
+    double deltaetaPolars,deltaphiPolars,deltarPolars;
 
     // Generate event.
     if (!pythia.next()) continue;
+
     for (int i = 0; i < pythia.event.size();  i++) { 
             if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()){
-                polar[ipolar]=pythia.event[i];
-                heavyb[iheavyb]=pythia.event[pythia.event[i].mother1()];
-                ipolar++; 
-                iheavyb++;
-            }
+                polar[ipolar]=pythia.event[i]; ipolar++; 
+                heavyb[iheavyb]=pythia.event[pythia.event[i].mother1()]; iheavyb++;
+                bjet[ib]=pythia.event[pythia.event[pythia.event[i].mother1()].daughter1()]; ib++;
 
-            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[pythia.event[i].daughter1()].idAbs() ==13 ){
                 if (pythia.event[pythia.event[i].daughter1()].pT() > pythia.event[pythia.event[i].daughter2()].pT()){
                     muon[imuon]= pythia.event[pythia.event[i].daughter1()]; imuon++;
                     muon[imuon]= pythia.event[pythia.event[i].daughter2()]; imuon++;
@@ -155,26 +164,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                     muon[imuon]= pythia.event[pythia.event[i].daughter2()]; imuon++;
                     muon[imuon]= pythia.event[pythia.event[i].daughter1()]; imuon++;
                 }
-            }
-
-            if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
-                bjet[ib]=pythia.event[i];
-                ib++;
-            }
-        }
+            }    
+    }
 
     bool PassPhaseCutb = 1;
     bool PassPhaseCutMuon =1;
 
-    PassPhaseCutMuon = muon[0].pT()>MUONPTCUT && muon[1].pT()>MUONPTCUT && abs(muon[0].eta())<MUONETACUT && abs(muon[1].eta())<MUONETACUT;
+    for (int j=0; j<4; j++) vct_muonpT.push_back(muon[j].pT());
+    std::sort(vct_muonpT.begin(),vct_muonpT.end());
+
+    PassPhaseCutMuon = vct_muonpT[0]>5 && vct_muonpT[1]>5 && vct_muonpT[2]>10 && vct_muonpT[3] >20 ;
+    PassPhaseCutMuon = PassPhaseCutMuon && abs(muon[0].eta())<2.4 && abs(muon[1].eta())<2.4;
+    PassPhaseCutMuon = PassPhaseCutMuon && abs(muon[2].eta())<2.4 && abs(muon[3].eta())<2.4;
+
     PassPhaseCutb = bjet[0].pT()> BPTCUT && abs(bjet[0].eta()) < BETACUT;
 
-    //for (int i=0; i<4 ; i++) { PassPhaseCutMuon = PassPhaseCutMuon && abs(muon[i].eta()) < MUONETACUT;}
-    //for (int i=0; i<2 ; i++) { PassPhaseCutb = PassPhaseCutb && (bjet[i].pT()> BPTCUT && abs(bjet[i].eta()) < BETACUT);}
-    // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
-    // cout<< " number of b is " << ib <<endl;
-    
-    if( PassPhaseCutMuon && PassPhaseCutb ){
+    //if( PassPhaseCutMuon && PassPhaseCutb ){
+    if( PassPhaseCutMuon){    
     //if( 1 ){
 
             iPassPhaseCutEvent++;
@@ -228,8 +234,23 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             DeltaPhi2 -> Fill(deltaphi2[0]);
             DeltaR2 -> Fill(deltar2[0]);
 
+
+            deltaetaPolars = std::abs(polar[0].eta() - polar[1].eta());
+            deltaphiPolars = std::abs(polar[0].phi() - polar[1].phi());
+            if (deltaphiPolars > 3.1415926) deltaphiPolars = 2*3.1415926 - deltaphiPolars;
+            deltarPolars = sqrt( deltaetaPolars * deltaetaPolars + deltaphiPolars * deltaphiPolars );
+            DeltaRPolars -> Fill( deltarPolars);
+            MuonFirstpT -> Fill (vct_muonpT[3]);
+            MuonSecondpT -> Fill (vct_muonpT[2]);
+            MuonThirdpT -> Fill (vct_muonpT[1]);
+            MuonForthpT -> Fill (vct_muonpT[0]);
+
+
+
             //-- fill txt file
             eventsfeatures << iPassPhaseCutEvent<<", ";
+            eventsfeatures << vct_muonpT[3]<<", "<<vct_muonpT[2]<<", "<< vct_muonpT[1]<<", "<<vct_muonpT[0]<<", ";
+            eventsfeatures << deltarPolars<<", ";
             eventsfeatures << muon[0].pT()<<", "<<muon[0].eta()<<", ";
             eventsfeatures << muon[1].pT()<<", "<<muon[1].eta()<<", ";
             eventsfeatures << polar[0].pT()<<", "<<polar[0].eta()<<", ";
@@ -277,6 +298,15 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     DeltaPhi2->Write();    delete DeltaPhi2;
     Deltaeta2->Write();    delete Deltaeta2;
     DeltaR2 ->Write();    delete DeltaR2;
+
+
+    DeltaRPolars -> Write();    delete DeltaRPolars;
+    MuonFirstpT -> Write();    delete MuonFirstpT;
+    MuonSecondpT -> Write();    delete MuonSecondpT;
+    MuonThirdpT -> Write();    delete MuonThirdpT;
+    MuonForthpT -> Write();    delete MuonForthpT;
+
+
 
 
     delete file;
