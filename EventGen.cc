@@ -174,8 +174,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
     // cout<< " number of b is " << ib <<endl;
     
-    if( PassPhaseCutMuon && PassPhaseCutb ){
-    //if( 1 ){
+    //if( PassPhaseCutMuon && PassPhaseCutb ){
+    if( 1 ){
 
             iPassPhaseCutEvent++;
             int iSideMuon=0;
