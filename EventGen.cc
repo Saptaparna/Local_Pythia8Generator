@@ -119,7 +119,9 @@ int main(int argc, char* argv[]) {
     TH1F *DeltaPhi = new TH1F("DeltaPhi","Delt phi between muons", 65, 0, 6.5);
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
     TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 40, 0, 8);
-    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200,65,0,6.5);    
+    TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200,65,0,6.5);  
+
+    TH1F *IMassFourMu = new TH1F("IMassFourMu","Invariant mass of mu mu mu mu", 50, 0, 500);    
 
 
 // Finishing booking root hist and root tree 
@@ -183,6 +185,10 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     if( PassPhaseCutMuon){    
     //if( 1 ){
 
+            //Particle temp;
+            //if (    muon[0].id()==muon[2].id()  ) {temp=muon[0];muon[0]=muon[2];muon[2]=temp;}
+            //else {temp=muon[0];muon[0]=muon[3];muon[3]=temp;}
+
             iPassPhaseCutEvent++;
             int iSideMuon=0;
             if(abs(muon[0].eta())>0.9)  iSideMuon++;
@@ -235,8 +241,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             DeltaR2 -> Fill(deltar2[0]);
 
 
-            deltaetaPolars = std::abs(polar[0].eta() - polar[1].eta());
-            deltaphiPolars = std::abs(polar[0].phi() - polar[1].phi());
+            deltaetaPolars = std::abs((muon[0].p()+muon[1].p()).eta() - (muon[2].p()+muon[3].p()).eta());
+            deltaphiPolars = std::abs((muon[0].p()+muon[1].p()).phi() - (muon[2].p()+muon[3].p()).phi());
             if (deltaphiPolars > 3.1415926) deltaphiPolars = 2*3.1415926 - deltaphiPolars;
             deltarPolars = sqrt( deltaetaPolars * deltaetaPolars + deltaphiPolars * deltaphiPolars );
             DeltaRPolars -> Fill( deltarPolars);
@@ -244,6 +250,10 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             MuonSecondpT -> Fill (vct_muonpT[2]);
             MuonThirdpT -> Fill (vct_muonpT[1]);
             MuonForthpT -> Fill (vct_muonpT[0]);
+
+            IMassFourMu -> Fill ((muon[0].p()+muon[1].p()+muon[2].p()+muon[3].p()).mCalc());
+
+
 
 
 
@@ -305,6 +315,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     MuonSecondpT -> Write();    delete MuonSecondpT;
     MuonThirdpT -> Write();    delete MuonThirdpT;
     MuonForthpT -> Write();    delete MuonForthpT;
+
+    IMassFourMu -> Write();     delete IMassFourMu;
 
 
 
