@@ -1,5 +1,5 @@
 
-#define myspinningparticle 25
+#define myspinningparticle 23
 // 25 higgs
 #define myheavyparticle 7
 #define MUONPTCUT 25
@@ -43,7 +43,18 @@ int main(int argc, char* argv[]) {
   // Generator.
   Pythia pythia;  
   // Read in commands from external file.
-  pythia.readFile(argv[1]);
+  pythia.readString("Beams:frameType = 4");
+  pythia.readString("Beams:LHEF = ../OutputRawData/unweighted_events.lhe");
+  pythia.readString("PartonLevel:MPI = off");
+  pythia.readString("PartonLevel:MPI = off");
+  pythia.readString("PartonLevel:FSR = off");
+  pythia.readString("HadronLevel:all = off");
+  pythia.readString("HadronLevel:Hadronize = off");
+  pythia.readString("HadronLevel:Decay = off");
+  pythia.readString("Main:numberOfEvents = 100000");
+
+  //pythia.init("../OutputRawData/unweighted_events.lhe");
+  //pythia.readFile(argv[1]);
 
     ofstream eventsfeatures; 
     TFile *file = new TFile;
@@ -100,9 +111,6 @@ int main(int argc, char* argv[]) {
     TH1F *heavyBeta = new TH1F("heavyBeta","heavy b eta", 100, -5, 5);
     TH2F *heavyBetapT = new TH2F("heavyBetapT", "heavy b eta:pT", 100,-5,5,100, 0, 200);
     TH1F *IMassbmumu = new TH1F("IMassbmumu","Invariant mass of mu mu b", 60, 0, 300);
-    TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between b-dimuon", 65, 0, 6.5);
-    TH1F *Deltaeta2 = new TH1F("Deltaeta2","Delt eta between b-dimuon", 100, -5, 5);
-    TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between b-dimuon", 65, 0, 6.5);
         
     TH1F *IMass = new TH1F("IMass","Invariant mass of 2 leading Muons", 70, 10, 80);
     TH1F *DeltaR = new TH1F("DeltaR","Delt R between muons", 65, 0, 6.5);
@@ -111,6 +119,11 @@ int main(int argc, char* argv[]) {
     TH1F *MuMupT = new TH1F("MuMupT","pT of mumu system", 100, 0, 200);
     TH1F *MuMupTratio = new TH1F("MuMupTratio","pT/mass of mumu system", 40, 0, 8);
     TH2F *RpT = new TH2F("RpT", "pT:dR", 100,0,200,65,0,6.5);    
+
+    // fat jet
+    TH1F *DeltaR2 = new TH1F("DeltaR2","Delt R between uu", 65, 0, 6.5);
+    TH1F *Deltaeta2 = new TH1F("Deltaeta2","Delt eta between uu", 100, -5, 5);
+    TH1F *DeltaPhi2 = new TH1F("DeltaPhi2","Delt phi between uu", 65, 0, 6.5);
 
 
 // Finishing booking root hist and root tree 
@@ -126,8 +139,9 @@ int main(int argc, char* argv[]) {
 // Begin event loop.
 for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
 
-    int imuon=0,ipolar=0,ib=0,iheavyb=0;
-    Particle muon[2]; 
+    int imuon=0,ipolar=0,ib=0,iheavyb=0,iupquark=0;
+    Particle muon[2];
+    Particle upquark[2]; 
     Particle bjet[1];
     Particle polar[1];
     Particle heavyb[1];
@@ -139,7 +153,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // Generate event.
     if (!pythia.next()) continue;
     for (int i = 0; i < pythia.event.size();  i++) { 
-            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()){
+            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[pythia.event[i].daughter1()].idAbs() ==13 ){
+            //if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[i].mother1()!=pythia.event[i].mother2()){
                 polar[ipolar]=pythia.event[i];
                 heavyb[iheavyb]=pythia.event[pythia.event[i].mother1()];
                 ipolar++; 
@@ -157,7 +172,12 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
                 }
             }
 
-            if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()!=5 ){
+            if(pythia.event[i].idAbs() == myspinningparticle && pythia.event[pythia.event[i].daughter1()].idAbs() ==1 ){
+                    upquark[iupquark]= pythia.event[pythia.event[i].daughter1()]; iupquark++;
+                    upquark[iupquark]= pythia.event[pythia.event[i].daughter2()]; iupquark++;
+            }
+
+            if(pythia.event[i].idAbs() == 5 && pythia.event[pythia.event[i].mother1()].idAbs()==8000002 ){
                 bjet[ib]=pythia.event[i];
                 ib++;
             }
@@ -174,8 +194,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
     // cout<< " number of muons is " << imuon << ", pT_mu1=" <<muon[0].pT()<< ", pT_mu2=" <<muon[1].pT() <<endl;
     // cout<< " number of b is " << ib <<endl;
     
-    //if( PassPhaseCutMuon && PassPhaseCutb ){
-    if( 1 ){
+    if( PassPhaseCutMuon && PassPhaseCutb ){
+    //if( 1 ){
 
             iPassPhaseCutEvent++;
             int iSideMuon=0;
@@ -218,8 +238,8 @@ for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
             RpT -> Fill ( (muon[0].p()+ muon[1].p()).pT(), deltar[0]);
 
 
-            deltaeta2[0] = std::abs(polar[0].eta() - bjet[0].eta());
-            deltaphi2[0] = std::abs(polar[0].phi() - bjet[0].phi());
+            deltaeta2[0] = std::abs(upquark[0].eta() - upquark[1].eta());
+            deltaphi2[0] = std::abs(upquark[0].phi() - upquark[1].phi());
             if (deltaphi2[0] > 3.1415926) deltaphi2[0] = 2*3.1415926 - deltaphi2[0];
             deltar2[0] = sqrt( deltaeta2[0] * deltaeta2[0] + deltaphi2[0] * deltaphi2[0] );
             invariantmass2[0]=(polar[0].p()+bjet[0].p()).mCalc();
